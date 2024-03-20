@@ -5,8 +5,13 @@ import java.util.List;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
+import jade.core.behaviours.FSMBehaviour;
 
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.finish;
+import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
+import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
@@ -38,6 +43,8 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap;
 	
+	
+	
 
 	/**
 	 * This method is automatically called when "agent".start() is executed.
@@ -46,10 +53,19 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 	 *	 		2) add the behaviours
 	 *          
 	 */
+	
+	private static final String A="explo";
+	private static final String B="ping";
+	private static final String C="receive";
+	private static final String D="share";
+	private static final String E="finish";
+
+
 	protected void setup(){
 
 		super.setup();
 		
+				
 		//get the parameters added to the agent at creation (if any)
 		final Object[] args = getArguments();
 		
@@ -66,6 +82,25 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 			}
 		}
 
+		FSMBehaviour fsm =new FSMBehaviour(this);
+		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames),A);
+		fsm.registerLastState(new finish(this), E);
+		fsm.registerState(new PingSomeone(list_agentNames), B);
+		fsm.registerState(new ReceiverPing(0), C);
+		fsm.registerState(new ShareMapBehaviour(this ,this.myMap,list_agentNames), D);
+		
+		
+		
+		fsm.registerTransition(A,B,1);
+		fsm.registerDefaultTransition(B,C);	
+		fsm.registerTransition(C,D,1);
+		fsm.registerDefaultTransition(D,A);	
+		fsm.registerTransition(C,A,0);
+		fsm.registerTransition(A,E,0);
+
+
+
+		
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 		
 		/************************************************
@@ -74,7 +109,7 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		 * 
 		 ************************************************/
 		
-		lb.add(new ExploCoopBehaviour(this,this.myMap,list_agentNames));
+		lb.add(fsm);
 
 		
 		
@@ -84,6 +119,7 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		
 		
 		addBehaviour(new startMyBehaviours(this,lb));
+
 		
 		System.out.println("the  agent "+this.getLocalName()+ " is started");
 
