@@ -63,7 +63,7 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 		for (String agentName : receivers) {
 			msg.addReceiver(new AID(agentName,AID.ISLOCALNAME));
 		}
-			
+		
 		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph();
 		try {					
 			msg.setContentObject(sg);

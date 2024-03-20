@@ -131,7 +131,9 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					this.myMap.mergeMap(sgreceived);
+					if (sgreceived != null){
+						this.myMap.mergeMap(sgreceived);
+					}
 				}
 
 				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
