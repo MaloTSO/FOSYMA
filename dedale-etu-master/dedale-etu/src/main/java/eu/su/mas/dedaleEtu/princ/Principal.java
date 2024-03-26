@@ -24,6 +24,8 @@ import jade.wrapper.StaleProxyException;
 import org.junit.Assert;
 import jade.wrapper.AgentContainer;
 
+
+
 /**
  * This class is used to start the platform and the agents.
  * To launch your agents in the environment you desire you will have to :
@@ -384,7 +386,7 @@ public class Principal {
 		agentName = "Elsa";
 
 		// 3) If you want to give specific parameters to your agent, add them here
-		Object[] entityParametersExplo1 = { "Tim" };
+		Object[] entityParametersExplo1 = { "Tim", "G1" };
 
 		// 4) Give the class name of your agent to let the system instantiate it
 		// ag=createNewDedaleAgent(c, agentName,DummyMovingAgent.class.getName(),
@@ -404,7 +406,7 @@ public class Principal {
 		agentName = "Tim";
 
 		// 3) If you want to give specific parameters to your agent, add them here
-		Object[] entityParametersExplo2 = { "Elsa" };
+		Object[] entityParametersExplo2 = { "Elsa", "G1" };
 
 		// 4) Give the class name of your agent to let the system instantiate it
 		ag = createNewDedaleAgent(c, agentName, ExploreCoopAgent.class.getName(), entityParametersExplo2);// ExploreSoloAgent
