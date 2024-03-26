@@ -57,6 +57,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 		super(myagent);
 		this.myMap=myMap;
 		this.list_agentNames=agentNames;
+        
 		exitValue=max;
 	}
 
