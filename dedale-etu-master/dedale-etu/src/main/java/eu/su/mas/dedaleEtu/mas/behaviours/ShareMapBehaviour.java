@@ -14,6 +14,7 @@ import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 
 /**
  * The agent periodically share its map.
@@ -64,7 +65,7 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 			msg.addReceiver(new AID(agentName,AID.ISLOCALNAME));
 		}
 		
-		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph();
+		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph(); 
 		try {					
 			msg.setContentObject(sg);
 		} catch (IOException e) {
