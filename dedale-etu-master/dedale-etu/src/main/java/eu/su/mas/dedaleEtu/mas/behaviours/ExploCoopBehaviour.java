@@ -63,8 +63,8 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 
-		if(this.myMap==null) {
-			this.myMap= new MapRepresentation();
+		if(this.myMap == null) {
+			this.myMap = new MapRepresentation();
 		}
 
 		//0) Retrieve the current position
@@ -98,7 +98,6 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 					if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
 				}
 			}
-
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){
 				//Explo finished
