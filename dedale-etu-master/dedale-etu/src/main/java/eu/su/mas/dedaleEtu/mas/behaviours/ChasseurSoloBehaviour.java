@@ -13,7 +13,8 @@ import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
-import jade.core.behaviours.TickerBehaviour; 
+import jade.core.behaviours.TickerBehaviour;
+import jade.core.behaviours.OneShotBehaviour; 
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage; 
 import jade.lang.acl.MessageTemplate;
@@ -58,10 +59,11 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
 		super(myagent,period);
 		this.myMap=myMap;
 		this.list_agentNames=agentNames;
+		
 	}
 
 	@Override
-	protected void onTick() {
+	public void onTick() {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
@@ -93,23 +95,25 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
                 if (coupleSuiv.getRight().get(0).getLeft().equals(Observation.STENCH)){
 
                     Location strenLocation=coupleSuiv.getLeft();
+					boolean isNewNode=this.myMap.addNewNode(strenLocation.getLocationId());
+					if (myPosition.getLocationId()!=strenLocation.getLocationId()) {
+						this.myMap.addEdge(myPosition.getLocationId(), strenLocation.getLocationId());
+					if (nextNodeId==null && isNewNode) nextNodeId=strenLocation.getLocationId();
+					}
 
-					((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(strenLocation.getLocationId()));
-
-                
-                }
+				}
+			
+			
+				else{
+					Location accessibleNode=coupleSuiv.getLeft();
+					boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
+					if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
+						this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
+						if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
+					}
+				}
+			
 			}
-			/////////////////COMMENTAIRE
-            //     else{
-            //         Location accessibleNode=iter.next().getLeft();
-            //         boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
-            //         if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
-            //             this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
-            //             if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
-            //         }
-            //     }
-				
-			// }
 
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){
@@ -117,23 +121,23 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
 				
 				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done, behaviour removed.");
 			}
-			/////////////////COMMENTAIRE
-			// else{
-			// 	//4) select next move.
-			// 	//4.1 If there exist one open node directly reachable, go for it,
-			// 	//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
-			// 	if (nextNodeId==null){
-			// 		//no directly accessible openNode
-			// 		//chose one, compute the path and take the first step.
-			// 		nextNodeId=this.myMap.getShortestPathToClosestOpenNode(myPosition.getLocationId()).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
-			// 		//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
-			// 	}
+		
+			else{
+				//4) select next move.
+				//4.1 If there exist one open node directly reachable, go for it,
+				//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
+				if (nextNodeId==null){
+					//no directly accessible openNode
+					//chose one, compute the path and take the first step.
+					nextNodeId=this.myMap.getShortestPathToClosestOpenNode(myPosition.getLocationId()).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
+				}
 				
 				
 				
 
-			// 	((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
-			//}
+				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
+			}
 
 		}
 	}
