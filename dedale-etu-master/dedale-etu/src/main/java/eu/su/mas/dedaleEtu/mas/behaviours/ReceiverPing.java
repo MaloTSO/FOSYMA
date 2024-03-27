@@ -50,6 +50,7 @@ public class ReceiverPing extends OneShotBehaviour {
 				msgResult.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME));  	
 				msgResult.setContent("Yes i'm "+this.myAgent.getAID());
 				this.myAgent.send(msgResult);
+				
 				exitValue=1;
 		}
 	}
