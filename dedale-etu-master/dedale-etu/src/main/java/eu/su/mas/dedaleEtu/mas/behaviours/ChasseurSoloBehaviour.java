@@ -92,8 +92,8 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
 			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 			Couple<Location, List<Couple<Observation, Integer>>> coupleSuiv = iter.next();
 			while(iter.hasNext()){
+				
                 if (coupleSuiv.getRight().get(0).getLeft().equals(Observation.STENCH)){
-
                     Location strenLocation=coupleSuiv.getLeft();
 					boolean isNewNode=this.myMap.addNewNode(strenLocation.getLocationId());
 					if (myPosition.getLocationId()!=strenLocation.getLocationId()) {
@@ -110,16 +110,24 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
 					if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
 						this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
 						if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
+						
 					}
-				}
+				
 			
+				}
 			}
 
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){
 				//Explo finished
-				
-				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done, behaviour removed.");
+				Location Position=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
+				Iterator<Couple<Location, List<Couple<Observation, Integer>>>> ite=lobs.iterator();
+				Location accessible=ite.next().getLeft();
+				if (Position.getLocationId()!=accessible.getLocationId()) {
+					String nextNode=accessible.getLocationId();
+					((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNode));
+				}
+
 			}
 		
 			else{
