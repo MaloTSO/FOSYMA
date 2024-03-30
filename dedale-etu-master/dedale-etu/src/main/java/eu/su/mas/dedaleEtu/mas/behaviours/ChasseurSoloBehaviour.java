@@ -36,7 +36,7 @@ import javafx.beans.Observable;
  * @author hc
  *
  */
-public class ChasseurSoloBehaviour extends TickerBehaviour {
+public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
@@ -47,7 +47,6 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
 	 */
 	private MapRepresentation myMap;
 
-	private List<String> list_agentNames;
 
 /**
  * 
@@ -55,104 +54,41 @@ public class ChasseurSoloBehaviour extends TickerBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent,long period,MapRepresentation myMap,List<String> agentNames) {
-		super(myagent,period);
+	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent,MapRepresentation myMap,int max) {
+		super(myagent);
 		this.myMap=myMap;
-		this.list_agentNames=agentNames;
-		
+		exitValue=max;
 	}
 
 	@Override
-	public void onTick() {
+	public void action() {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
 		}
 
-		//0) Retrieve the current position
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
 		if (myPosition!=null){
-			//List of observable from the agent's current position
-			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
+			
+			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
 
-			/**
-	         * Just added here to let you see what the agent is doing, otherwise he will be too quick
-			 */
 			try {
 				this.myAgent.doWait(500);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			//1) remove the current node from openlist and add it to closedNodes.
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
 
-			String nextNodeId=null;
+			
 			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
-			Couple<Location, List<Couple<Observation, Integer>>> coupleSuiv = iter.next();
 			while(iter.hasNext()){
-				
-                if (coupleSuiv.getRight().get(0).getLeft().equals(Observation.STENCH)){
-                    Location strenLocation=coupleSuiv.getLeft();
-					boolean isNewNode=this.myMap.addNewNode(strenLocation.getLocationId());
-					if (myPosition.getLocationId()!=strenLocation.getLocationId()) {
-						this.myMap.addEdge(myPosition.getLocationId(), strenLocation.getLocationId());
-					if (nextNodeId==null && isNewNode) nextNodeId=strenLocation.getLocationId();
-					}
+				System.out.println(iter.next().getRight().get(0).getLeft().equals(Observation.STENCH));
 
-				}
-			
-			
-				else{
-					Location accessibleNode=coupleSuiv.getLeft();
-					boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
-					if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
-						this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
-						if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
-						
-					}
-				
-			
-				}
-			}
-
-			//3) while openNodes is not empty, continues.
-			if (!this.myMap.hasOpenNode()){
-				//Explo finished
-				Location Position=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
-				Iterator<Couple<Location, List<Couple<Observation, Integer>>>> ite=lobs.iterator();
-				Location accessible=ite.next().getLeft();
-				if (Position.getLocationId()!=accessible.getLocationId()) {
-					String nextNode=accessible.getLocationId();
-					((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNode));
-				}
 
 			}
-		
-			else{
-				//4) select next move.
-				//4.1 If there exist one open node directly reachable, go for it,
-				//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
-				if (nextNodeId==null){
-					//no directly accessible openNode
-					//chose one, compute the path and take the first step.
-					nextNodeId=this.myMap.getShortestPathToClosestOpenNode(myPosition.getLocationId()).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
-					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
-				}
-				
-				
-				
-
-				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
-			}
-
 		}
-	}
 
-	@Override
-	public int onEnd() {
-		return exitValue;
 	}
-
 }
