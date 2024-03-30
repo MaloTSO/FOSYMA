@@ -36,11 +36,11 @@ import javafx.beans.Observable;
  * @author hc
  *
  */
-public class ChasseurSoloBehaviour extends OneShotBehaviour {
+public class ChasseurSoloBehaviour extends TickerBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
-	private int exitValue;
+
 
 	/**
 	 * Current knowledge of the agent regarding the environment
@@ -54,14 +54,14 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent,MapRepresentation myMap,int max) {
-		super(myagent);
+	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent,MapRepresentation myMap,long period) {
+		super(myagent,period);
 		this.myMap=myMap;
-		exitValue=max;
+
 	}
 
 	@Override
-	public void action() {
+	protected void onTick() {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
@@ -80,14 +80,32 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			}
 
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
-
+			String nextNodeId=null;
 			
+			int i=0;
+		
 			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 			while(iter.hasNext()){
-				System.out.println(iter.next().getRight().get(0).getLeft().equals(Observation.STENCH));
-
-
+				Couple<Location, List<Couple<Observation, Integer>>> coupleSuiv=iter.next();
+				if(coupleSuiv.getRight().get(i).getLeft().equals(Observation.STENCH)){
+					Location accessibleNode=coupleSuiv.getLeft();
+					boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
+					if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
+						this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
+						if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
+					}
+				}
 			}
+			if (nextNodeId==null){
+				int n = (int)(Math.random()*(lobs.size()+1));
+				Location balade=lobs.get(n).getLeft();
+				boolean isNewNode=this.myMap.addNewNode(balade.getLocationId());
+				if (myPosition.getLocationId()!=balade.getLocationId()) {
+					this.myMap.addEdge(myPosition.getLocationId(), balade.getLocationId());
+					if (nextNodeId==null && isNewNode) nextNodeId=balade.getLocationId();
+				}
+			}
+
 		}
 
 	}

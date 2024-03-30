@@ -90,7 +90,7 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 		 * 
 		 ************************************************/
 		
-		lb.add(new ChasseurSoloBehaviour(this,this.myMap,0));
+		lb.add(new ChasseurSoloBehaviour(this,this.myMap,500));
 
 		
 		
