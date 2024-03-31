@@ -13,8 +13,8 @@ import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.finish;
-import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
+import eu.su.mas.dedaleEtu.mas.behaviours.Suiveur;
+import eu.su.mas.dedaleEtu.mas.behaviours.Balade;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
@@ -47,22 +47,14 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 	private MapRepresentation myMap;
 	
 	
-	
+	private static final String A="explo";
+	private static final String B="balade";
+	private static final String C="suiveur";
 
-	/**
-	 * This method is automatically called when "agent".start() is executed.
-	 * Consider that Agent is launched for the first time. 
-	 * 			1) set the agent attributes 
-	 *	 		2) add the behaviours
-	 *          
-	 */
-	
 	protected void setup(){
 
 		super.setup();
 		
-				
-		//get the parameters added to the agent at creation (if any)
 		final Object[] args = getArguments();
 		
 		List<String> list_agentNames=new ArrayList<String>();
@@ -78,35 +70,24 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 			}
 		}
 
-
-
-
+		FSMBehaviour fsm =new FSMBehaviour(this);
+		fsm.registerFirstState(new ChasseurSoloBehaviour(this,0,this.myMap),A);
+		fsm.registerState(new Balade(this,this.myMap,0), B);
+		fsm.registerState(new Suiveur(this,this.myMap,0), C);
 		
+		fsm.registerTransition(A,B,2);
+		fsm.registerTransition(A,C,1);
+		fsm.registerTransition(A,A,0);
+		fsm.registerTransition(B,B,0);
+		fsm.registerTransition(C,C,0);
+
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 		
-		/************************************************
-		 * 
-		 * ADD the behaviours of the Dummy Moving Agent
-		 * 
-		 ************************************************/
-		
-		lb.add(new ChasseurSoloBehaviour(this,this.myMap,500));
+		lb.add(fsm);
 
-		
-		
-		/***
-		 * MANDATORY TO ALLOW YOUR AGENT TO BE DEPLOYED CORRECTLY
-		 */
-		
-		
 		addBehaviour(new startMyBehaviours(this,lb));
 
-		
 		System.out.println("the  agent "+this.getLocalName()+ " is started");
-
 	}
-	
-	
-	
 }
 
