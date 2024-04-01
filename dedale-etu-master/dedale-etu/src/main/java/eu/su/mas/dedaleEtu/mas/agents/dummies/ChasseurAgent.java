@@ -72,14 +72,13 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 
 		FSMBehaviour fsm =new FSMBehaviour(this);
 		fsm.registerFirstState(new ChasseurSoloBehaviour(this,0,this.myMap),A);
-		fsm.registerState(new Balade(this,this.myMap,0), B);
-		fsm.registerState(new Suiveur(this,this.myMap,0), C);
+		fsm.registerState(new Balade(this,this.myMap), B);
+		fsm.registerState(new Suiveur(this,this.myMap), C);
 		
-		fsm.registerTransition(A,B,2);
+		fsm.registerTransition(A,B,0);
 		fsm.registerTransition(A,C,1);
-		fsm.registerTransition(A,A,0);
-		fsm.registerTransition(B,B,0);
-		fsm.registerTransition(C,C,0);
+		fsm.registerDefaultTransition(B,A);
+		fsm.registerDefaultTransition(C,C);
 
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 		

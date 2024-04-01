@@ -181,6 +181,14 @@ public class MapRepresentation implements Serializable {
 				.collect(Collectors.toList());
 	}
 
+	public List<String> getCloseNodes(){
+		return this.g.nodes()
+				.filter(x ->x .getAttribute("ui.class")==MapAttribute.closed.toString()) 
+				.map(Node::getId)
+				.collect(Collectors.toList());
+	}
+
+
 
 	/**
 	 * Before the migration we kill all non serializable components and store their data in a serializable form

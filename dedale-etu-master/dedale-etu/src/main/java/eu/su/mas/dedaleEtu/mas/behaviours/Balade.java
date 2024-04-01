@@ -47,7 +47,8 @@ public class Balade extends OneShotBehaviour {
 	 * Current knowledge of the agent regarding the environment
 	 */
 	private MapRepresentation myMap;
-    private int exitValue;
+	
+    
 
 
 /**
@@ -56,14 +57,15 @@ public class Balade extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public Balade(final AbstractDedaleAgent myagent,MapRepresentation myMap,int max) {
+	public Balade(final AbstractDedaleAgent myagent,MapRepresentation myMap) {
 		super(myagent);
 		this.myMap=myMap;
-        exitValue=max;
 	}
 
 	@Override
 	public void action() {
+		System.out.println("je me balade");
+
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
@@ -88,17 +90,10 @@ public class Balade extends OneShotBehaviour {
 			if(n==0){
 				n=1;
 			}
-			
 			Location balade=lobs.get(n).getLeft();
             nextNodeId=balade.getLocationId();
             ((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
-        
-
 		}
 
-	}
-    @Override
-	public int onEnd() {
-		return exitValue;
 	}
 }

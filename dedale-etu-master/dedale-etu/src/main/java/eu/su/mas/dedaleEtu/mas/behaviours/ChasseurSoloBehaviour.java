@@ -61,6 +61,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
+		System.out.println("je suis le chasseur");
 
 		if(this.myMap == null) {
 			this.myMap = new MapRepresentation();
@@ -78,51 +79,35 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			}
 
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
-
-			
-			String nextNodeId=null;
 			int j=0;
 			int i=0;
-			while (i<lobs.size()){
+			int tmp=-1;
 
+			System.out.println(lobs);
+			
+
+			while (i<lobs.size()){
 				
 				Location accessibleNode=lobs.get(i).getLeft();
-				boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
-				if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
-					this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
-					if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
-				}
-				
-				if(lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
+				this.myMap.addNewNode(accessibleNode.getLocationId());
+
+				if(lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
 					exitValue=1;
-					i=lobs.size()+1;
-				}
-				else{
-					i++;
+					tmp=i;
+					
 				}
 				
-			}
-			
-			if (!this.myMap.hasOpenNode()){
-				exitValue=2;
 
-			}else{
-				//4) select next move.
-				//4.1 If there exist one open node directly reachable, go for it,
-				//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
-				if (nextNodeId==null){
-					//no directly accessible openNode
-					//chose one, compute the path and take the first step.
-					nextNodeId=this.myMap.getShortestPathToClosestOpenNode(myPosition.getLocationId()).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
-					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
-				
-				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
+				i++;
+
+
+			}
+			if(tmp!=-1){
+				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(lobs.get(tmp).getLeft().getLocationId()));
 			}
 
 		}
 		}
-	}
-
 	@Override
 	public int onEnd() {
 		return exitValue;
