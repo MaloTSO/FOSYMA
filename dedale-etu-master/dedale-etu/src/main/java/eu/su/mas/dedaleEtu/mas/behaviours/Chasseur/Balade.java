@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.Chasseur;
 
 import java.util.Iterator;
 import java.util.List;
@@ -11,13 +11,16 @@ import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.TickerBehaviour;
+import jade.core.behaviours.OneShotBehaviour; 
 import jade.core.behaviours.SimpleBehaviour;
-import jade.lang.acl.ACLMessage;
+import jade.lang.acl.ACLMessage; 
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import jade.util.leap.ArrayList;
+import javafx.beans.Observable;
 
 
 /**
@@ -34,18 +37,19 @@ import jade.lang.acl.UnreadableException;
  * @author hc
  *
  */
-public class ChasseurSoloBehaviour extends OneShotBehaviour {
+public class Balade extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
-	private int exitValue;
+
 
 	/**
 	 * Current knowledge of the agent regarding the environment
 	 */
 	private MapRepresentation myMap;
-
 	
+    
+
 
 /**
  * 
@@ -53,18 +57,18 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation myMap) {
+	public Balade(final AbstractDedaleAgent myagent,MapRepresentation myMap) {
 		super(myagent);
 		this.myMap=myMap;
-		exitValue=max;
 	}
 
 	@Override
 	public void action() {
-		System.out.println("je suis le chasseur");
+		
 
-		if(this.myMap == null) {
-			this.myMap = new MapRepresentation();
+
+		if(this.myMap==null) {
+			this.myMap= new MapRepresentation();
 		}
 
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
@@ -72,6 +76,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 		if (myPosition!=null){
 			
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
+
 			try {
 				this.myAgent.doWait(500);
 			} catch (Exception e) {
@@ -79,38 +84,22 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			}
 
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
-			int j=0;
-			int i=0;
-			int tmp=-1;
-
-			System.out.println(lobs);
+			String nextNodeId=null;
 			
-
-			while (i<lobs.size()){
-				
-				Location accessibleNode=lobs.get(i).getLeft();
-				this.myMap.addNewNode(accessibleNode.getLocationId());
-
-				if(lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
-					exitValue=1;
-					tmp=i;
-					
-				}
-				
-
-				i++;
-
-
+			int n = (int)(Math.random()*(lobs.size()));
+			if(n==0){
+				n=1;
 			}
-			if(tmp!=-1){
-				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(lobs.get(tmp).getLeft().getLocationId()));
+			Location balade=lobs.get(n).getLeft();
+            nextNodeId=balade.getLocationId();
+			if (myPosition.getLocationId()!=lobs.get(n).getLeft().getLocationId()) {
+				this.myMap.addEdge(myPosition.getLocationId(), lobs.get(n).getLeft().getLocationId());	
 			}
+            ((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
+		}
+		
+				
+				
 
-		}
-		}
-	@Override
-	public int onEnd() {
-		return exitValue;
 	}
-
 }

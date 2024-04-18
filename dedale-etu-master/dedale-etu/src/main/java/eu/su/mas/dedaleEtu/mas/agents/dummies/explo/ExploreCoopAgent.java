@@ -6,12 +6,12 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
 import jade.core.behaviours.FSMBehaviour;
-
-import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.finish;
-import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ExploCoopBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.PingSomeone;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiveMap;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiverPing;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.finish;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
@@ -59,6 +59,7 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 	private static final String C="receive";
 	private static final String D="share";
 	private static final String E="finish";
+	private static final String F="receivemap";
 
 
 	protected void setup(){
@@ -85,18 +86,25 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		FSMBehaviour fsm =new FSMBehaviour(this);
 		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames),A);
 		fsm.registerLastState(new finish(this), E);
-		fsm.registerState(new PingSomeone(list_agentNames), B);
+		fsm.registerState(new PingSomeone(list_agentNames,0), B);
 		fsm.registerState(new ReceiverPing(0), C);
 		fsm.registerState(new ShareMapBehaviour(this ,this.myMap,list_agentNames), D);
-		
+		fsm.registerState(new ReceiveMap(this ,this.myMap), F);
+
 		
 		
 		fsm.registerTransition(A,B,1);
-		fsm.registerDefaultTransition(B,C);	
-		fsm.registerTransition(C,D,1);
-		fsm.registerDefaultTransition(D,A);	
-		fsm.registerTransition(C,A,0);
 		fsm.registerTransition(A,E,0);
+		fsm.registerTransition(B,C,0);
+		fsm.registerTransition(B,D,1);
+		fsm.registerTransition(C,A,0);
+		fsm.registerTransition(C,D,1);
+		fsm.registerDefaultTransition(D,F);
+		fsm.registerDefaultTransition(F,A);
+
+
+		
+		
 
 
 

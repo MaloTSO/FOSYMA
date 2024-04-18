@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +15,9 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
+
 
 /**
  * The agent periodically share its map.
@@ -52,6 +55,11 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 
 	@Override
 	public void action() {
+		try {
+			this.myAgent.doWait(100);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		//4) At each time step, the agent blindly send all its graph to its surrounding to illustrate how to share its knowledge (the topology currently) with the the others agents. 	
 		// If it was written properly, this sharing action should be in a dedicated behaviour set, the receivers be automatically computed, and only a subgraph would be shared.
 		
@@ -65,13 +73,39 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 			msg.addReceiver(new AID(agentName,AID.ISLOCALNAME));
 		}
 		
-		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph(); 
+		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph();
+	
 		try {					
 			msg.setContentObject(sg);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		((AbstractDedaleAgent)this.myAgent).sendMessage(msg);
+
+
+		try {
+			this.myAgent.doWait(500);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("SHARE-TOPO"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
+
+        if (msgReceived!=null) {
+            SerializableSimpleGraph<String, MapAttribute> sgreceived=null;
+            try {
+                sgreceived = (SerializableSimpleGraph<String, MapAttribute>)msgReceived.getContentObject();
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+            }
+			if (sgreceived!=null){
+				this.myMap.mergeMap(sgreceived);
+			}
+        
+        }
+        
 
 		
 	}

@@ -6,15 +6,15 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
 import jade.core.behaviours.FSMBehaviour;
-
-import eu.su.mas.dedaleEtu.mas.behaviours.ChasseurSoloBehaviour;
-
-import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.finish;
-import eu.su.mas.dedaleEtu.mas.behaviours.Suiveur;
-import eu.su.mas.dedaleEtu.mas.behaviours.Balade;
+import eu.su.mas.dedaleEtu.mas.behaviours.Chasseur.Balade;
+import eu.su.mas.dedaleEtu.mas.behaviours.Chasseur.ChasseurSoloBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.Chasseur.Suiveur;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ExploCoopBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ExploSoloBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiveMap;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiverPing;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.finish;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
@@ -50,6 +50,8 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 	private static final String A="explo";
 	private static final String B="balade";
 	private static final String C="suiveur";
+	private static final String D="receive";
+	private static final String E="receivemap";
 
 	protected void setup(){
 
@@ -74,11 +76,18 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 		fsm.registerFirstState(new ChasseurSoloBehaviour(this,0,this.myMap),A);
 		fsm.registerState(new Balade(this,this.myMap), B);
 		fsm.registerState(new Suiveur(this,this.myMap), C);
+		fsm.registerState(new ReceiverPing(0), D);
+		fsm.registerState(new ReceiveMap(this,this.myMap), E);
 		
 		fsm.registerTransition(A,B,0);
 		fsm.registerTransition(A,C,1);
 		fsm.registerDefaultTransition(B,A);
 		fsm.registerDefaultTransition(C,C);
+
+		fsm.registerTransition(D,A,0);
+		fsm.registerTransition(D,E,1);
+		fsm.registerDefaultTransition(E,A);
+
 
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 		

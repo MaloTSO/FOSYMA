@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +36,13 @@ public class ReceiverPing extends OneShotBehaviour {
 	}
 
 	public void action(){
+
+		try {
+			this.myAgent.doWait(500);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		
 		//1) create the reception template (inform + name of the sender)
 		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("UselessProtocol"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
@@ -46,13 +53,18 @@ public class ReceiverPing extends OneShotBehaviour {
 		
 		if (msg != null) {						
 				final ACLMessage msgResult = new ACLMessage(ACLMessage.INFORM);
+				msgResult.setProtocol("Communication");
 				msgResult.setSender(this.myAgent.getAID());
 				msgResult.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME));  	
 				msgResult.setContent("Yes i'm "+this.myAgent.getAID());
 				this.myAgent.send(msgResult);
 				
 				exitValue=1;
+
+
 		}
+
+		
 	}
 	public int onEnd() {
 		return exitValue;

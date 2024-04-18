@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.Chasseur;
 
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +11,8 @@ import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.core.behaviours.OneShotBehaviour; 
 import jade.core.behaviours.SimpleBehaviour;
@@ -21,23 +21,9 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.util.leap.ArrayList;
 import javafx.beans.Observable;
+import weka.core.pmml.jaxbbindings.False;
 
-
-/**
- * <pre>
- * This behaviour allows an agent to explore the environment and learn the associated topological map.
- * The algorithm is a pseudo - DFS computationally consuming because its not optimised at all.
- * 
- * When all the nodes around him are visited, the agent randomly select an open node and go there to restart its dfs. 
- * This (non optimal) behaviour is done until all nodes are explored. 
- * 
- * Warning, this behaviour does not save the content of visited nodes, only the topology.
- * Warning, the sub-behaviour ShareMap periodically share the whole map
- * </pre>
- * @author hc
- *
- */
-public class Balade extends OneShotBehaviour {
+public class Suiveur extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
@@ -47,7 +33,6 @@ public class Balade extends OneShotBehaviour {
 	 * Current knowledge of the agent regarding the environment
 	 */
 	private MapRepresentation myMap;
-	
     
 
 
@@ -57,14 +42,14 @@ public class Balade extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public Balade(final AbstractDedaleAgent myagent,MapRepresentation myMap) {
+	public Suiveur(final AbstractDedaleAgent myagent,MapRepresentation myMap) {
 		super(myagent);
 		this.myMap=myMap;
 	}
 
 	@Override
 	public void action() {
-		System.out.println("je me balade");
+		
 
 
 		if(this.myMap==null) {
@@ -77,6 +62,8 @@ public class Balade extends OneShotBehaviour {
 			
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
 
+		
+
 			try {
 				this.myAgent.doWait(500);
 			} catch (Exception e) {
@@ -85,15 +72,36 @@ public class Balade extends OneShotBehaviour {
 
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
 			String nextNodeId=null;
-			
-			int n = (int)(Math.random()*(lobs.size()));
-			if(n==0){
-				n=1;
-			}
-			Location balade=lobs.get(n).getLeft();
-            nextNodeId=balade.getLocationId();
-            ((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
-		}
+			boolean stenchdetected = false;
+			int i=0;
+			int j=0;
+			while (i<lobs.size() && stenchdetected== false){
 
+				if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
+					stenchdetected=true;
+				}
+				else{
+					i++;
+				}
+
+			}
+
+			Location accessibleNode=lobs.get(i).getLeft();
+			if( this.myMap.getCloseNodes().contains(accessibleNode.getLocationId())){
+				nextNodeId=accessibleNode.getLocationId();
+			}
+			else{
+				boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
+				if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {
+					this.myMap.addEdge(myPosition.getLocationId(), accessibleNode.getLocationId());
+					if (nextNodeId==null && isNewNode) nextNodeId=accessibleNode.getLocationId();
+				}
+			}
+			((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
+
+		}
 	}
+
 }
+
+
