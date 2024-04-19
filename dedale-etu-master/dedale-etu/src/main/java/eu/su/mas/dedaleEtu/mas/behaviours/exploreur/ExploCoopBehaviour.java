@@ -38,18 +38,18 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ExploCoopBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation myMap,List<String> agentNames) {
+	public ExploCoopBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation mymap,List<String> agentNames) {
 		super(myagent);
-		this.myMap=myMap;
+		this.myMap=mymap;
 		this.list_agentNames=agentNames;
 		exitValue=max;
 	}
 
 	@Override
 	public void action() {
-
-		if(this.myMap == null) {
-			this.myMap = new MapRepresentation();
+		if(this.myMap==null) {
+			this.myMap= new MapRepresentation();
+			
 		}
 
 		//0) Retrieve the current position

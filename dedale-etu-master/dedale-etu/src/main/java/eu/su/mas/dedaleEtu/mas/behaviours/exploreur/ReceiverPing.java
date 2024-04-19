@@ -50,7 +50,6 @@ public class ReceiverPing extends OneShotBehaviour {
 		//2) get the message
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
 		
-		
 		if (msg != null) {						
 				final ACLMessage msgResult = new ACLMessage(ACLMessage.INFORM);
 				msgResult.setProtocol("Communication");
@@ -60,11 +59,8 @@ public class ReceiverPing extends OneShotBehaviour {
 				this.myAgent.send(msgResult);
 				
 				exitValue=1;
-
-
 		}
 
-		
 	}
 	public int onEnd() {
 		return exitValue;

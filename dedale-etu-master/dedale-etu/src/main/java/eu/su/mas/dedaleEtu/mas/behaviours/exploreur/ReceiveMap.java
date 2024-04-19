@@ -46,7 +46,6 @@ public class ReceiveMap extends OneShotBehaviour {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("SHARE-TOPO"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
 
@@ -58,11 +57,8 @@ public class ReceiveMap extends OneShotBehaviour {
                 e.printStackTrace();
             }
 			if (sgreceived!=null){
-            	this.myMap.mergeMap(sgreceived);
+				this.myMap.mergeMap(sgreceived);
 			}
-        
         }
-        
-		}
-
+	}
 }

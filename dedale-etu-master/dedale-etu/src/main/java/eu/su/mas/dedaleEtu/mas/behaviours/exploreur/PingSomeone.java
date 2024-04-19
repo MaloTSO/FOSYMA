@@ -21,33 +21,39 @@ public class PingSomeone extends OneShotBehaviour {
 	private int exitValue;
 
 
-	public PingSomeone(List<String> receivers,int max) {
-		super();
+	public PingSomeone(final AbstractDedaleAgent myagent,List<String> receivers,int max) {
+		super(myagent);
 		this.receivers=receivers;
 		exitValue=max;
 
 	}
 	
 	public void action(){
+
+		exitValue=0;
 		try {
-			this.myAgent.doWait(500);
+			this.myAgent.doWait(100);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 
 		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("UselessProtocol"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 		final ACLMessage msgR = this.myAgent.receive(msgTemplate);
 		
-		if (msgR != null) {						
+		if (msgR != null) {		
 				final ACLMessage msgResult = new ACLMessage(ACLMessage.INFORM);
+				msgResult.setProtocol("Communication");
 				msgResult.setSender(this.myAgent.getAID());
 				msgResult.addReceiver(new AID(msgR.getSender().getLocalName(), AID.ISLOCALNAME));  	
-				msgResult.setContent("Yes i'm "+this.myAgent.getAID());
+				msgResult.setContent("Yes i'm "+this.myAgent.getLocalName());
 				this.myAgent.send(msgResult);
 				exitValue=1;
 		}
 
 		else{
+
+			
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 			msg.setProtocol("UselessProtocol");
 			msg.setSender(this.myAgent.getAID());

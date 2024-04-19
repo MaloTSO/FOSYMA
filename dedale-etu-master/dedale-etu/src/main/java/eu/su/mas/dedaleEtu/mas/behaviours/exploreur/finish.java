@@ -24,7 +24,7 @@ public class finish extends OneShotBehaviour{
 	}
 	
 	public void action() {
-		System.out.println(myAgent.getAID()+" a terminé");
+		System.out.println(this.myAgent.getLocalName()+" a terminé");
 	}
 
 

@@ -42,8 +42,9 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 	 * @param mymap (the map to share)
 	 * @param receivers the list of agents to send the map to
 	 */
-	public ShareMapBehaviour(Agent a,MapRepresentation mymap, List<String> receivers) {
-		super(a);
+	public ShareMapBehaviour(Agent myagent,MapRepresentation mymap, List<String> receivers) {
+		super(myagent);
+		System.out.println(mymap);
 		this.myMap=mymap;
 		this.receivers=receivers;	
 	}
@@ -56,58 +57,28 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 	@Override
 	public void action() {
 		try {
-			this.myAgent.doWait(100);
+			this.myAgent.doWait(200);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//4) At each time step, the agent blindly send all its graph to its surrounding to illustrate how to share its knowledge (the topology currently) with the the others agents. 	
 		// If it was written properly, this sharing action should be in a dedicated behaviour set, the receivers be automatically computed, and only a subgraph would be shared.
 		
-		if(this.myMap==null) {
-			this.myMap= new MapRepresentation();
-		}
+		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setProtocol("SHARE-TOPO");
 		msg.setSender(this.myAgent.getAID());
 		for (String agentName : receivers) {
 			msg.addReceiver(new AID(agentName,AID.ISLOCALNAME));
 		}
-		
 		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph();
-	
+		
 		try {					
 			msg.setContentObject(sg);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		((AbstractDedaleAgent)this.myAgent).sendMessage(msg);
-
-
-		try {
-			this.myAgent.doWait(500);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("SHARE-TOPO"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
-
-        if (msgReceived!=null) {
-            SerializableSimpleGraph<String, MapAttribute> sgreceived=null;
-            try {
-                sgreceived = (SerializableSimpleGraph<String, MapAttribute>)msgReceived.getContentObject();
-            } catch (UnreadableException e) {
-                e.printStackTrace();
-            }
-			if (sgreceived!=null){
-				this.myMap.mergeMap(sgreceived);
-			}
-        
-        }
-        
-
-		
 	}
 
 }
