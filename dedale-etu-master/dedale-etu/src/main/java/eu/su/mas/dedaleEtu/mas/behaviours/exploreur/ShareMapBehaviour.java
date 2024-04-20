@@ -6,6 +6,7 @@ import java.util.List;
 import dataStructures.serializableGraph.SerializableSimpleGraph;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.ExploreCoopAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 
@@ -60,6 +61,9 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 			this.myAgent.doWait(200);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		if(this.myMap==null) {
+			this.myMap=((ExploreCoopAgent)(this.myAgent)).getMyMap();
 		}
 		//4) At each time step, the agent blindly send all its graph to its surrounding to illustrate how to share its knowledge (the topology currently) with the the others agents. 	
 		// If it was written properly, this sharing action should be in a dedicated behaviour set, the receivers be automatically computed, and only a subgraph would be shared.

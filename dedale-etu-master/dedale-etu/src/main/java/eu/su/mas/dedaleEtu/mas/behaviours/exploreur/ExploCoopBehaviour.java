@@ -11,6 +11,7 @@ import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.ExploreCoopAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
@@ -48,8 +49,8 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		if(this.myMap==null) {
-			this.myMap= new MapRepresentation();
-			
+			((ExploreCoopAgent)(this.myAgent)).setMyMap(new MapRepresentation());
+			this.myMap=((ExploreCoopAgent)(this.myAgent)).getMyMap();
 		}
 
 		//0) Retrieve the current position

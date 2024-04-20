@@ -42,10 +42,10 @@ import jade.core.behaviours.Behaviour;
 public class ExploreCoopAgent extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
-	private MapRepresentation myMap;
-	
-	
-	
+	private MapRepresentation myMap=null;
+
+
+
 
 	/**
 	 * This method is automatically called when "agent".start() is executed.
@@ -54,7 +54,7 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 	 *	 		2) add the behaviours
 	 *          
 	 */
-	
+
 	private static final String A="explo";
 	private static final String B="ping";
 	private static final String C="receivePing";
@@ -68,14 +68,11 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 
 		super.setup();
 
-		
-		
-				
 		//get the parameters added to the agent at creation (if any)
 		final Object[] args = getArguments();
-		
+
 		List<String> list_agentNames=new ArrayList<String>();
-		
+
 		if(args.length==0){
 			System.err.println("Error while creating the agent, names of agent to contact expected");
 			System.exit(-1);
@@ -88,7 +85,7 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		}
 
 		FSMBehaviour fsm =new FSMBehaviour(this);
-	
+
 		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames),A);
 		fsm.registerLastState(new finish(this), E);
 		fsm.registerState(new PingSomeone(this,list_agentNames,0), B);
@@ -100,15 +97,15 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 
 		fsm.registerTransition(A,D,1);
 
-		
+
 		fsm.registerTransition(A,E,0);
 		fsm.registerDefaultTransition(D,A);
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 		/*
 		fsm.registerTransition(A,B,1);
 		fsm.registerTransition(A,E,0);
@@ -118,40 +115,44 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		fsm.registerTransition(G,F,0);
 		fsm.registerDefaultTransition(D,F);
 		fsm.registerDefaultTransition(F,A);
-		
-		*/
 
-
-		
-		
+		 */
 
 
 
-		
+
+
+
+
+
 		List<Behaviour> lb=new ArrayList<Behaviour>();
-		
+
 		/************************************************
 		 * 
 		 * ADD the behaviours of the Dummy Moving Agent
 		 * 
 		 ************************************************/
-		
+
 		lb.add(fsm);
 
-		
-		
+
+
 		/***
 		 * MANDATORY TO ALLOW YOUR AGENT TO BE DEPLOYED CORRECTLY
 		 */
-		
-		
+
+
 		addBehaviour(new startMyBehaviours(this,lb));
 
-		
+
 		System.out.println("the  agent "+this.getLocalName()+ " is started");
 
 	}
-	
-	
-	
+	public void setMyMap(MapRepresentation m) {
+		this.myMap=m;
+	}
+	public MapRepresentation getMyMap() {
+		return this.myMap;
+	}
+
 }
