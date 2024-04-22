@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
+package eu.su.mas.dedaleEtu.mas.behaviours.Chasseur;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,12 +25,12 @@ import jade.lang.acl.MessageTemplate;
  * @author hc
  *
  */
-public class ReceiverPing extends OneShotBehaviour {
+public class ReceiverPingChasse extends OneShotBehaviour {
 	
 	private static final long serialVersionUID = 9088209402507795299L;	
 	
 
-	public ReceiverPing(final AbstractDedaleAgent myagent) {
+	public ReceiverPingChasse(final AbstractDedaleAgent myagent) {
 		super(myagent);
 	}
 
@@ -60,5 +60,3 @@ public class ReceiverPing extends OneShotBehaviour {
 		}
 	}
 }
-
-

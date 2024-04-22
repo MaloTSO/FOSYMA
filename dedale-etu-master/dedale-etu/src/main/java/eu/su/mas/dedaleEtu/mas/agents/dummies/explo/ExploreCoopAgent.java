@@ -89,41 +89,21 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames),A);
 		fsm.registerLastState(new finish(this), E);
 		fsm.registerState(new PingSomeone(this,list_agentNames,0), B);
-		fsm.registerState(new ReceiverPing(0), C);
+		fsm.registerState(new ReceiverPing(this), C);
 		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames), D);
 		fsm.registerState(new ReceiveMap(this ,this.myMap), F);
 		fsm.registerState(new Receiver(this,0), G);
 
 
-		fsm.registerTransition(A,D,1);
-
-
-		fsm.registerTransition(A,E,0);
-		fsm.registerDefaultTransition(D,A);
-
-
-
-
-
-
-		/*
 		fsm.registerTransition(A,B,1);
 		fsm.registerTransition(A,E,0);
 		fsm.registerTransition(B,D,1);
-		fsm.registerTransition(B,G,0);
+		fsm.registerTransition(B,C,0);
 		fsm.registerTransition(G,D,1);
-		fsm.registerTransition(G,F,0);
+		fsm.registerTransition(G,A,0);
+		fsm.registerDefaultTransition(C,G);
 		fsm.registerDefaultTransition(D,F);
 		fsm.registerDefaultTransition(F,A);
-
-		 */
-
-
-
-
-
-
-
 
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 

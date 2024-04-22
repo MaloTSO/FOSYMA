@@ -1,10 +1,10 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
+package eu.su.mas.dedaleEtu.mas.behaviours.Chasseur;
 
 import java.io.IOException;
 import java.util.List;
 
 import dataStructures.serializableGraph.SerializableSimpleGraph;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.ExploreCoopAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.ChasseurAgent;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -26,14 +26,14 @@ import jade.lang.acl.UnreadableException;
  * @author hc
  *
  */
-public class ReceiveMap extends OneShotBehaviour {
+public class ReceiverMapChasse extends OneShotBehaviour {
 	
 	private static final long serialVersionUID = 9088209402507795299L;	
     
 	private MapRepresentation myMap;
 	
 
-	public ReceiveMap(final AbstractDedaleAgent myagent,MapRepresentation myMap) {
+	public ReceiverMapChasse(final AbstractDedaleAgent myagent,MapRepresentation myMap) {
 		super(myagent);
         this.myMap=myMap;
 		
@@ -48,7 +48,7 @@ public class ReceiveMap extends OneShotBehaviour {
 		}
 
 		if(this.myMap==null) {
-			this.myMap=((ExploreCoopAgent)(this.myAgent)).getMyMap();
+			this.myMap=((ChasseurAgent)(this.myAgent)).getMyMap();
 		}
 		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("SHARE-TOPO"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);

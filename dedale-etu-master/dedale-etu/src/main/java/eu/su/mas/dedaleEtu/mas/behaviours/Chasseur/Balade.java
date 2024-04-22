@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import dataStructures.serializableGraph.SerializableSimpleGraph;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.ChasseurAgent;
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.Observation;
@@ -64,11 +65,9 @@ public class Balade extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		
-
 
 		if(this.myMap==null) {
-			this.myMap= new MapRepresentation();
+			this.myMap=((ChasseurAgent)(this.myAgent)).getMyMap();
 		}
 
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();

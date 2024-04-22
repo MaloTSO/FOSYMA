@@ -11,7 +11,7 @@ import eu.su.mas.dedaleEtu.mas.behaviours.Chasseur.ChasseurSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.Chasseur.Suiveur;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ExploCoopBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ExploSoloBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiveMap;
+import eu.su.mas.dedaleEtu.mas.behaviours.Chasseur.ReceiverMapChasse;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiverPing;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.finish;
@@ -44,7 +44,7 @@ import jade.core.behaviours.Behaviour;
 public class ChasseurAgent extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
-	private MapRepresentation myMap;
+	private MapRepresentation myMap=null;
 	
 	
 	private static final String A="explo";
@@ -76,8 +76,8 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 		fsm.registerFirstState(new ChasseurSoloBehaviour(this,0,this.myMap),A);
 		fsm.registerState(new Balade(this,this.myMap), B);
 		fsm.registerState(new Suiveur(this,this.myMap), C);
-		fsm.registerState(new ReceiverPing(0), D);
-		fsm.registerState(new ReceiveMap(this,this.myMap), E);
+		fsm.registerState(new ReceiverPing(this), D);
+		fsm.registerState(new ReceiverMapChasse(this,this.myMap), E);
 		
 		fsm.registerTransition(A,B,0);
 		fsm.registerTransition(A,C,1);
@@ -97,5 +97,13 @@ public class ChasseurAgent extends AbstractDedaleAgent {
 
 		System.out.println("the  agent "+this.getLocalName()+ " is started");
 	}
+
+	public void setMyMap(MapRepresentation m) {
+		this.myMap=m;
+	}
+	public MapRepresentation getMyMap() {
+		return this.myMap;
+	}
+
 }
 
