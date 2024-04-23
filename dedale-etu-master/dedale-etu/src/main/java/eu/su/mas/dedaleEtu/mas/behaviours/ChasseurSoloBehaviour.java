@@ -44,6 +44,8 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 	 * Current knowledge of the agent regarding the environment
 	 */
 	private MapRepresentation myMap;
+	private List<Couple<String,Location>> posAgent=null;
+
 
 	
 
@@ -53,9 +55,10 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation myMap) {
+	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation myMap, List<Couple<String,Location>> posAgent) {
 		super(myagent);
 		this.myMap=myMap;
+		this.posAgent=posAgent;
 		exitValue=max;
 	}
 
@@ -66,9 +69,21 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 		if(this.myMap == null) {
 			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
+
+		
 		
 
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
+		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
+		System.out.println(posAgent);
+		
+		((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+
+		System.out.println(posAgent);
+
+
+
 
 		if (myPosition!=null){
 			

@@ -2,7 +2,8 @@ package eu.su.mas.dedaleEtu.mas.agents.dummies;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import dataStructures.tuple.Couple;
+import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
 import jade.core.behaviours.FSMBehaviour;
@@ -47,6 +48,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap=null;
+    private List<Couple<String,Location>> posAgent;
 
 
 
@@ -100,7 +102,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames), D);
 		fsm.registerState(new ReceiveMap(this ,this.myMap), F);
 		fsm.registerState(new Receiver(this,0), E);
-        fsm.registerState(new ChasseurSoloBehaviour(this,0,this.myMap),G);
+        fsm.registerState(new ChasseurSoloBehaviour(this,0,this.myMap,this.posAgent),G);
 		fsm.registerState(new Balade(this,this.myMap), H);
 		fsm.registerState(new Suiveur(this,this.myMap,0), I);
 
@@ -154,6 +156,13 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	}
 	public MapRepresentation getMyMap() {
 		return this.myMap;
+	}
+
+    public void setPosAgent(Couple<String,Location> m) {
+		this.posAgent.add(m);
+	}
+	public List<Couple<String,Location>> getPosAgent() {
+		return this.posAgent;
 	}
 
 }
