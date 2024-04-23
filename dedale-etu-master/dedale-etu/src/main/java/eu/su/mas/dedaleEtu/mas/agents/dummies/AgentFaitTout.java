@@ -48,7 +48,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap=null;
-    private List<Couple<String,Location>> posAgent;
+    private List<Couple<String,Location>> posAgent = new ArrayList<>();
 
 
 
@@ -159,6 +159,15 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	}
 
     public void setPosAgent(Couple<String,Location> m) {
+
+		
+		for (int i = 0; i<this.posAgent.size(); i++)  
+		{
+			if(this.posAgent.get(i).getLeft().equals(m.getLeft()))
+			{
+				this.posAgent.remove(this.posAgent.get(i));
+			}
+		}
 		this.posAgent.add(m);
 	}
 	public List<Couple<String,Location>> getPosAgent() {

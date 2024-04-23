@@ -75,7 +75,6 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
-		System.out.println(posAgent);
 		
 		((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
 		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
