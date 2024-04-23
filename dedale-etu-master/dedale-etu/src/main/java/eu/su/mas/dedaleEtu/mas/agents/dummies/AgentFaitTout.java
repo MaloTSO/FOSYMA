@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
+package eu.su.mas.dedaleEtu.mas.agents.dummies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,16 +6,20 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
 import jade.core.behaviours.FSMBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ExploCoopBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.PingSomeone;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiveMap;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ReceiverPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.Receiver;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.finish;
+import eu.su.mas.dedaleEtu.mas.behaviours.Balade;
+import eu.su.mas.dedaleEtu.mas.behaviours.ChasseurSoloBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
+import eu.su.mas.dedaleEtu.mas.behaviours.ReceiveMap;
+import eu.su.mas.dedaleEtu.mas.behaviours.Receiver;
+import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
+import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.Suiveur;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
+
 
 /**
  * <pre>
@@ -39,7 +43,7 @@ import jade.core.behaviours.Behaviour;
  */
 
 
-public class ExploreCoopAgent extends AbstractDedaleAgent {
+public class AgentFaitTout extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap=null;
@@ -59,9 +63,13 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 	private static final String B="ping";
 	private static final String C="receivePing";
 	private static final String D="share";
-	private static final String E="finish";
+	private static final String E="receive";
 	private static final String F="receivemap";
-	private static final String G="receive";
+	private static final String G="chasseur";
+    private static final String H="balade";
+    private static final String I="suiveur";
+
+
 
 
 	protected void setup(){
@@ -87,23 +95,36 @@ public class ExploreCoopAgent extends AbstractDedaleAgent {
 		FSMBehaviour fsm =new FSMBehaviour(this);
 
 		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames),A);
-		fsm.registerLastState(new finish(this), E);
 		fsm.registerState(new PingSomeone(this,list_agentNames,0), B);
 		fsm.registerState(new ReceiverPing(this), C);
 		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames), D);
 		fsm.registerState(new ReceiveMap(this ,this.myMap), F);
-		fsm.registerState(new Receiver(this,0), G);
+		fsm.registerState(new Receiver(this,0), E);
+        fsm.registerState(new ChasseurSoloBehaviour(this,0,this.myMap),G);
+		fsm.registerState(new Balade(this,this.myMap), H);
+		fsm.registerState(new Suiveur(this,this.myMap,0), I);
+
 
 
 		fsm.registerTransition(A,B,1);
-		fsm.registerTransition(A,E,0);
+		fsm.registerTransition(A,G,0);
 		fsm.registerTransition(B,D,1);
 		fsm.registerTransition(B,C,0);
-		fsm.registerTransition(G,D,1);
-		fsm.registerTransition(G,A,0);
-		fsm.registerDefaultTransition(C,G);
+		fsm.registerTransition(E,D,1);
+		fsm.registerTransition(E,A,0);
+		fsm.registerDefaultTransition(C,E);
 		fsm.registerDefaultTransition(D,F);
 		fsm.registerDefaultTransition(F,A);
+        fsm.registerTransition(G,H,0);
+        fsm.registerTransition(G,I,1);
+        fsm.registerDefaultTransition(H,G);
+        fsm.registerTransition(I,I,0);
+        fsm.registerTransition(I,G,1);
+
+
+
+
+
 
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 

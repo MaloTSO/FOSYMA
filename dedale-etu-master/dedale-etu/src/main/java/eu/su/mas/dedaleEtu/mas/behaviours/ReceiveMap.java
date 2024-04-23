@@ -1,10 +1,10 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
+package eu.su.mas.dedaleEtu.mas.behaviours;
 
 import java.io.IOException;
 import java.util.List;
 
 import dataStructures.serializableGraph.SerializableSimpleGraph;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.ExploreCoopAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -42,13 +42,13 @@ public class ReceiveMap extends OneShotBehaviour {
 	public void action(){
 
         try {
-			this.myAgent.doWait(500);
+			this.myAgent.doWait(200);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		if(this.myMap==null) {
-			this.myMap=((ExploreCoopAgent)(this.myAgent)).getMyMap();
+			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
 		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("SHARE-TOPO"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);

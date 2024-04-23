@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
+package eu.su.mas.dedaleEtu.mas.behaviours;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ReceiverPing extends OneShotBehaviour {
 	public void action(){
 
 		try {
-			this.myAgent.doWait(500);
+			this.myAgent.doWait(100);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

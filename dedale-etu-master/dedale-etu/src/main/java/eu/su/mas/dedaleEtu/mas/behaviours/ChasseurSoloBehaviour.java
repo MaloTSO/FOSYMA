@@ -1,10 +1,10 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.Chasseur;
+package eu.su.mas.dedaleEtu.mas.behaviours;
 
 import java.util.Iterator;
 import java.util.List;
 
 import dataStructures.serializableGraph.SerializableSimpleGraph;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ChasseurAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.Observation;
@@ -12,7 +12,6 @@ import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploreur.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
@@ -62,10 +61,10 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
+		exitValue=0;
 		
 		if(this.myMap == null) {
-			((ChasseurAgent)(this.myAgent)).setMyMap(new MapRepresentation());
-			this.myMap=((ChasseurAgent)(this.myAgent)).getMyMap();
+			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
 		
 
@@ -75,7 +74,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
 			try {
-				this.myAgent.doWait(500);
+				this.myAgent.doWait(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

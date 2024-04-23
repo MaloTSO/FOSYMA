@@ -1,1 +1,1 @@
-http://DESKTOP-N6EPFES:7778/acc
+http://10.51.34.26:7778/acc

@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
+package eu.su.mas.dedaleEtu.mas.behaviours;
 
 import java.util.ArrayList;
 import java.util.HashSet;

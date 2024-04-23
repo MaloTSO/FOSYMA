@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploreur;
+package eu.su.mas.dedaleEtu.mas.behaviours;
 
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +11,7 @@ import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.ExploreCoopAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
@@ -49,8 +49,8 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		if(this.myMap==null) {
-			((ExploreCoopAgent)(this.myAgent)).setMyMap(new MapRepresentation());
-			this.myMap=((ExploreCoopAgent)(this.myAgent)).getMyMap();
+			((AgentFaitTout)(this.myAgent)).setMyMap(new MapRepresentation());
+			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
 
 		//0) Retrieve the current position
@@ -64,7 +64,7 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
 			 */
 			try {
-				this.myAgent.doWait(500);
+				this.myAgent.doWait(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
