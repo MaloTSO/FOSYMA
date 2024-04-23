@@ -70,10 +70,10 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	private static final String E="receive";
 	private static final String F="receivemap";
 	private static final String G="chasseur";
-    private static final String H="balade";
-    private static final String I="suiveur";
-	private static final String J="SendPos";
-    private static final String K="receivePos";
+    //private static final String H="balade";
+    //private static final String I="suiveur";
+	private static final String H="SendPos";
+    private static final String I="receivePos";
 
 
 
@@ -106,16 +106,16 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames), D);
 		fsm.registerState(new ReceiveMap(this ,this.myMap), F);
 		fsm.registerState(new Receiver(this,0), E);
-        fsm.registerState(new ChasseurSoloBehaviour(this,0,this.myMap,this.posAgent),G);
-		fsm.registerState(new Balade(this,this.myMap), H);
-		fsm.registerState(new Suiveur(this,this.myMap,0), I);
-		fsm.registerState(new SendPosition(this,list_agentNames,this.posAgent), J);
-		fsm.registerState(new ReceivePosition(this,this.posAgent), K);
+        fsm.registerState(new ChasseurSoloBehaviour(this,this.myMap,this.posAgent),G);
+		//fsm.registerState(new Balade(this,this.myMap), H);
+		//fsm.registerState(new Suiveur(this,this.myMap,0), I);
+		fsm.registerState(new SendPosition(this,list_agentNames,this.posAgent), H);
+		fsm.registerState(new ReceivePosition(this,this.posAgent), I);
 
 
 
 		fsm.registerTransition(A,B,1);
-		fsm.registerTransition(A,G,0);
+		fsm.registerTransition(A,H,0);
 		fsm.registerTransition(B,D,1);
 		fsm.registerTransition(B,C,0);
 		fsm.registerTransition(E,D,1);
@@ -123,14 +123,9 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 		fsm.registerDefaultTransition(C,E);
 		fsm.registerDefaultTransition(D,F);
 		fsm.registerDefaultTransition(F,A);
-        fsm.registerTransition(G,H,0);
-        fsm.registerTransition(G,I,1);
-        fsm.registerDefaultTransition(H,G);
-        fsm.registerTransition(I,I,0);
-        fsm.registerTransition(I,G,1);
-		fsm.registerDefaultTransition(H,J);
-		fsm.registerDefaultTransition(J,K);
-		fsm.registerDefaultTransition(K,G);
+        fsm.registerDefaultTransition(H,I);
+		fsm.registerDefaultTransition(I,G);
+		fsm.registerDefaultTransition(G,H);
 
 
 		

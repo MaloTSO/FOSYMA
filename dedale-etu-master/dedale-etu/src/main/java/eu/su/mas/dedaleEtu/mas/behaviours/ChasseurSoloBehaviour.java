@@ -38,55 +38,57 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
-	private int exitValue;
-
-	/**
-	 * Current knowledge of the agent regarding the environment
-	 */
 	private MapRepresentation myMap;
 	private List<Couple<String,Location>> posAgent;
-
-
-	
-
 /**
  * 
  * @param myagent reference to the agent we are adding this behaviour to
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation myMap, List<Couple<String,Location>> posAgent) {
+	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, MapRepresentation myMap, List<Couple<String,Location>> posAgent) {
 		super(myagent);
 		this.myMap=myMap;
 		this.posAgent=posAgent;
-		exitValue=max;
 	}
 
 	@Override
 	public void action() {
-		exitValue=0;
-		
+
 		if(this.myMap == null) {
 			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
 
 		
-		
-
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
-		
-		((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+
+		if (this.posAgent==null){
+			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+			
+		}
+
 		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
-
-		System.out.println(posAgent);
-
-
-
-
 		if (myPosition!=null){
 			
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
+
+			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+
+			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
+
+			while (iter.hasNext()){
+				Location node=iter.next().getLeft();
+				for (int j=0; j<this.posAgent.size();j++){
+					if (node.equals(this.posAgent.get(j).getRight())){
+						iter.remove();
+						break;
+					}
+				}
+			}
+
+			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+
 			try {
 				this.myAgent.doWait(100);
 			} catch (Exception e) {
@@ -94,44 +96,35 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			}
 
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
-			int j=0;
+
+			String nextNodeId=null;
+			boolean stenchdetected = false;
 			int i=0;
-			int tmp=-1;
+			int j=0;
+			while (i<lobs.size() && stenchdetected== false){
 
-			
-			
+				if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
+					stenchdetected=true;
+				}
+				else{
+					i++;
+				}
 
-			while (i<lobs.size()){
-				
+			}
+			if (stenchdetected==false){
+				int n = (int)(Math.random()*(lobs.size()));
+				if(n==0){
+					n=1;
+				}
+				Location balade=lobs.get(n).getLeft();
+				nextNodeId=balade.getLocationId();
+			}
+			else{	
 				Location accessibleNode=lobs.get(i).getLeft();
-				this.myMap.addNewNode(accessibleNode.getLocationId());
-
-				if(lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
-					exitValue=1;
-					tmp=i;
-					
-				}
-				
-
-				i++;
-
-
+				nextNodeId=accessibleNode.getLocationId();
 			}
-			if(tmp!=-1){
-
-				this.myMap.addNewNode(lobs.get(tmp).getLeft().getLocationId());
-				if (myPosition.getLocationId()!=lobs.get(tmp).getLeft().getLocationId()) {
-					this.myMap.addEdge(myPosition.getLocationId(), lobs.get(tmp).getLeft().getLocationId());
-				
-				}
-			
-			}
-
+			((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
 		}
-	}
-	@Override
-	public int onEnd() {
-		return exitValue;
-	}
 
+	}
 }
