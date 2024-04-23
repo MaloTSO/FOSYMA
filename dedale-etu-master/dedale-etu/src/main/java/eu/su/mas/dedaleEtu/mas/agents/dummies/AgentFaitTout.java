@@ -15,6 +15,8 @@ import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceiveMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.Receiver;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
+import eu.su.mas.dedaleEtu.mas.behaviours.ReceivePosition;
+import eu.su.mas.dedaleEtu.mas.behaviours.SendPosition;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.Suiveur;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
@@ -70,6 +72,8 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	private static final String G="chasseur";
     private static final String H="balade";
     private static final String I="suiveur";
+	private static final String J="SendPos";
+    private static final String K="receivePos";
 
 
 
@@ -105,6 +109,8 @@ public class AgentFaitTout extends AbstractDedaleAgent {
         fsm.registerState(new ChasseurSoloBehaviour(this,0,this.myMap,this.posAgent),G);
 		fsm.registerState(new Balade(this,this.myMap), H);
 		fsm.registerState(new Suiveur(this,this.myMap,0), I);
+		fsm.registerState(new SendPosition(this,list_agentNames,this.posAgent), J);
+		fsm.registerState(new ReceivePosition(this,this.posAgent), K);
 
 
 
@@ -122,6 +128,12 @@ public class AgentFaitTout extends AbstractDedaleAgent {
         fsm.registerDefaultTransition(H,G);
         fsm.registerTransition(I,I,0);
         fsm.registerTransition(I,G,1);
+		fsm.registerDefaultTransition(H,J);
+		fsm.registerDefaultTransition(J,K);
+		fsm.registerDefaultTransition(K,G);
+
+
+		
 
 
 
@@ -173,5 +185,8 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	public List<Couple<String,Location>> getPosAgent() {
 		return this.posAgent;
 	}
+
+
+
 
 }

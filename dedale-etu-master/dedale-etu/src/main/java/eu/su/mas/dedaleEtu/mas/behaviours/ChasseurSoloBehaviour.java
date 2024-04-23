@@ -44,7 +44,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 	 * Current knowledge of the agent regarding the environment
 	 */
 	private MapRepresentation myMap;
-	private List<Couple<String,Location>> posAgent=null;
+	private List<Couple<String,Location>> posAgent;
 
 
 	
