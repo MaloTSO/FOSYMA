@@ -28,7 +28,7 @@ import jade.lang.acl.UnreadableException;
  * @author hc
  *
  */
-public class ShareMapBehaviour extends OneShotBehaviour{
+public class Share extends OneShotBehaviour{
 	
 	private MapRepresentation myMap;
 	private List<String> receivers;
@@ -43,7 +43,7 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 	 * @param mymap (the map to share)
 	 * @param receivers the list of agents to send the map to
 	 */
-	public ShareMapBehaviour(Agent myagent,MapRepresentation mymap, List<String> receivers) {
+	public Share(Agent myagent,MapRepresentation mymap, List<String> receivers) {
 		super(myagent);
 		System.out.println(mymap);
 		this.myMap=mymap;
@@ -80,28 +80,5 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 		}
 		((AbstractDedaleAgent)this.myAgent).sendMessage(msg);
 
-		try {
-			this.myAgent.doWait(250);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		
-		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("SHARE-TOPO"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
-
-        if (msgReceived!=null) {
-            SerializableSimpleGraph<String, MapAttribute> sgreceived=null;
-            try {
-                sgreceived = (SerializableSimpleGraph<String, MapAttribute>)msgReceived.getContentObject();
-            } catch (UnreadableException e) {
-                e.printStackTrace();
-            }
-			if (sgreceived!=null){
-				this.myMap.mergeMap(sgreceived);
-			}
-        }
 	}
 }
-
-

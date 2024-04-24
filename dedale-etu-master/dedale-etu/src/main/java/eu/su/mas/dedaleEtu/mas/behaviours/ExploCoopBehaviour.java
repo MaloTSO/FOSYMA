@@ -32,6 +32,7 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 	private MapRepresentation myMap;
 
 	private List<String> list_agentNames;
+	private List<Couple<String,Location>> posAgent;
 
 /**
  * 
@@ -39,10 +40,11 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ExploCoopBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation mymap,List<String> agentNames) {
+	public ExploCoopBehaviour(final AbstractDedaleAgent myagent, int max,MapRepresentation mymap,List<String> agentNames,List<Couple<String,Location>> posAgent) {
 		super(myagent);
 		this.myMap=mymap;
 		this.list_agentNames=agentNames;
+		this.posAgent=posAgent;
 		exitValue=max;
 	}
 
@@ -53,30 +55,42 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
 
-		//0) Retrieve the current position
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
+		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
+
+		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+		((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+		
 
 		if (myPosition!=null){
 			//List of observable from the agent's current position
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
 
-			/**
-			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
-			 */
 			try {
 				this.myAgent.doWait(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			//1) remove the current node from openlist and add it to closedNodes.
+			//Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
+
+			// while (iter.hasNext()){
+			// 	Location node=iter.next().getLeft();
+			// 	for (int j=0; j<this.posAgent.size();j++){
+			// 		if (node.equals(this.posAgent.get(j).getRight())){
+			// 			iter.remove();
+			// 			break;
+			// 		}
+			// 	}
+			// }
+
 			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
 
 			//2) get the surrounding nodes and, if not in closedNodes, add them to open nodes.
 			String nextNodeId=null;
-			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
-			while(iter.hasNext()){
-				Location accessibleNode=iter.next().getLeft();
+			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> itera=lobs.iterator();
+			while(itera.hasNext()){
+				Location accessibleNode=itera.next().getLeft();
 				boolean isNewNode=this.myMap.addNewNode(accessibleNode.getLocationId());
 				//the node may exist, but not necessarily the edge
 				if (myPosition.getLocationId()!=accessibleNode.getLocationId()) {

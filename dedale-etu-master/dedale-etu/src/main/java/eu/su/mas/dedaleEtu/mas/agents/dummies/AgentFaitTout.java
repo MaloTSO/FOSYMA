@@ -12,12 +12,14 @@ import eu.su.mas.dedaleEtu.mas.behaviours.ChasseurSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
-import eu.su.mas.dedaleEtu.mas.behaviours.ReceiveMap;
+//import eu.su.mas.dedaleEtu.mas.behaviours.ReceiveMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.Receiver;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceivePosition;
 import eu.su.mas.dedaleEtu.mas.behaviours.SendPosition;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.Share;
+import eu.su.mas.dedaleEtu.mas.behaviours.BloqueGolem;
 import eu.su.mas.dedaleEtu.mas.behaviours.Suiveur;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
@@ -52,6 +54,8 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	private MapRepresentation myMap=null;
     private List<Couple<String,Location>> posAgent = new ArrayList<>();
 
+	private int counter=0;
+
 
 
 
@@ -66,14 +70,16 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	private static final String A="explo";
 	private static final String B="ping";
 	private static final String C="receivePing";
-	private static final String D="share";
+	private static final String D="shareMap";
 	private static final String E="receive";
-	private static final String F="receivemap";
+	private static final String F="Share";
+	//private static final String F="receivemap";
 	private static final String G="chasseur";
     //private static final String H="balade";
     //private static final String I="suiveur";
 	private static final String H="SendPos";
     private static final String I="receivePos";
+	private static final String J="Bloque";
 
 
 
@@ -100,32 +106,40 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 
 		FSMBehaviour fsm =new FSMBehaviour(this);
 
-		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames),A);
-		fsm.registerState(new PingSomeone(this,list_agentNames,0), B);
-		fsm.registerState(new ReceiverPing(this), C);
+		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames,this.posAgent),A);
+		fsm.registerState(new PingSomeone(this,list_agentNames,0,this.posAgent), B);
+		fsm.registerState(new ReceiverPing(this,this.posAgent), C);
 		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames), D);
-		fsm.registerState(new ReceiveMap(this ,this.myMap), F);
-		fsm.registerState(new Receiver(this,0), E);
-        fsm.registerState(new ChasseurSoloBehaviour(this,this.myMap,this.posAgent),G);
+		//fsm.registerState(new ReceiveMap(this ,this.myMap), F);
+		fsm.registerState(new Share(this,this.myMap,list_agentNames), F);
+		fsm.registerState(new Receiver(this,0,this.posAgent), E);
+        fsm.registerState(new ChasseurSoloBehaviour(this,this.myMap,this.posAgent,0,counter),G);
 		//fsm.registerState(new Balade(this,this.myMap), H);
 		//fsm.registerState(new Suiveur(this,this.myMap,0), I);
 		fsm.registerState(new SendPosition(this,list_agentNames,this.posAgent), H);
 		fsm.registerState(new ReceivePosition(this,this.posAgent), I);
+		fsm.registerState(new BloqueGolem(this,list_agentNames), J);
+
 
 
 
 		fsm.registerTransition(A,B,1);
-		fsm.registerTransition(A,H,0);
+		fsm.registerTransition(A,F,0);
 		fsm.registerTransition(B,D,1);
 		fsm.registerTransition(B,C,0);
 		fsm.registerTransition(E,D,1);
 		fsm.registerTransition(E,A,0);
 		fsm.registerDefaultTransition(C,E);
-		fsm.registerDefaultTransition(D,F);
-		fsm.registerDefaultTransition(F,A);
+		fsm.registerDefaultTransition(D,A);
+		fsm.registerDefaultTransition(F,H);
         fsm.registerDefaultTransition(H,I);
 		fsm.registerDefaultTransition(I,G);
-		fsm.registerDefaultTransition(G,H);
+		fsm.registerTransition(G,H,0);
+		fsm.registerTransition(G,J,1);
+		fsm.registerDefaultTransition(J,J);
+
+
+
 
 
 		
@@ -179,6 +193,14 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	}
 	public List<Couple<String,Location>> getPosAgent() {
 		return this.posAgent;
+	}
+
+	public int getCount(){
+		return counter;
+	}
+
+	public void reset(){
+		counter=0;
 	}
 
 
