@@ -73,7 +73,9 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
 
+
 			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+			
 
 			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 
@@ -86,6 +88,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 					}
 				}
 			}
+
 
 			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
 
@@ -113,7 +116,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			}
 			if (stenchdetected==false){
 				int n = (int)(Math.random()*(lobs.size()));
-				if(n==0){
+				if(n==0 && lobs.size()>1){
 					n=1;
 				}
 				Location balade=lobs.get(n).getLeft();

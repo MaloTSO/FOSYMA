@@ -412,8 +412,7 @@ public class Principal {
 		ag = createNewDedaleAgent(c, agentName, AgentFaitTout.class.getName(), entityParametersExplo2);// ExploreSoloAgent
 		agentList.add(ag);
 
-		//
-		//
+		
 		/*********
 		 * AGENT Explo3
 		 *********/
