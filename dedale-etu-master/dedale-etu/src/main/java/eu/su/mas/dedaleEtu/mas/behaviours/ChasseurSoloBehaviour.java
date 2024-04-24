@@ -88,6 +88,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 					}
 				}
 			}
+			System.out.println(this.myAgent.getLocalName()+" "+this.posAgent);
 
 
 			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
@@ -98,35 +99,42 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 				e.printStackTrace();
 			}
 
-			this.myMap.addNode(myPosition.getLocationId(), MapAttribute.closed);
-
 			String nextNodeId=null;
-			boolean stenchdetected = false;
-			int i=0;
-			int j=0;
-			while (i<lobs.size() && stenchdetected== false){
-
-				if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
-					stenchdetected=true;
-				}
-				else{
-					i++;
-				}
-
+			if (lobs.size()==0){
+				nextNodeId=myPosition.getLocationId();
 			}
-			if (stenchdetected==false){
-				int n = (int)(Math.random()*(lobs.size()));
-				if(n==0 && lobs.size()>1){
-					n=1;
+
+			else{
+
+				boolean stenchdetected = false;
+				int i=0;
+				int j=0;
+				while (i<lobs.size() && stenchdetected== false){
+
+					if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
+						stenchdetected=true;
+					}
+					else{
+						i++;
+					}
+
 				}
-				Location balade=lobs.get(n).getLeft();
-				nextNodeId=balade.getLocationId();
-			}
-			else{	
-				Location accessibleNode=lobs.get(i).getLeft();
-				nextNodeId=accessibleNode.getLocationId();
+				if (stenchdetected==false){
+					int n = (int)(Math.random()*(lobs.size()));
+					if(n==0 && lobs.size()>1){
+						n=1;
+					}
+					Location balade=lobs.get(n).getLeft();
+					nextNodeId=balade.getLocationId();
+				}
+				else{	
+					Location accessibleNode=lobs.get(i).getLeft();
+					nextNodeId=accessibleNode.getLocationId();
+				}
+
 			}
 			((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
+
 		}
 
 	}
