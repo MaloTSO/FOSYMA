@@ -134,7 +134,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 		fsm.registerDefaultTransition(F,H);
         fsm.registerDefaultTransition(H,I);
 		fsm.registerDefaultTransition(I,G);
-		fsm.registerTransition(G,H,0);
+		fsm.registerTransition(G,F,0);
 		fsm.registerTransition(G,J,1);
 		fsm.registerDefaultTransition(J,J);
 
