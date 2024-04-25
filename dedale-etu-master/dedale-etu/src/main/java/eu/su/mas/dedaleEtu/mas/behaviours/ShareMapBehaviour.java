@@ -45,7 +45,6 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 	 */
 	public ShareMapBehaviour(Agent myagent,MapRepresentation mymap, List<String> receivers) {
 		super(myagent);
-		System.out.println(mymap);
 		this.myMap=mymap;
 		this.receivers=receivers;	
 	}
@@ -58,7 +57,7 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 	@Override
 	public void action() {
 		try {
-			this.myAgent.doWait(100);
+			this.myAgent.doWait(150);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

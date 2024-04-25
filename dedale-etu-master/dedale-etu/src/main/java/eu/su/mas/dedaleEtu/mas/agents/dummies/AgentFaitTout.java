@@ -54,7 +54,6 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	private MapRepresentation myMap=null;
     private List<Couple<String,Location>> posAgent = new ArrayList<>();
 
-	private int counter=0;
 
 
 
@@ -113,7 +112,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 		//fsm.registerState(new ReceiveMap(this ,this.myMap), F);
 		fsm.registerState(new Share(this,this.myMap,list_agentNames), F);
 		fsm.registerState(new Receiver(this,0,this.posAgent), E);
-        fsm.registerState(new ChasseurSoloBehaviour(this,this.myMap,this.posAgent,0,counter),G);
+        fsm.registerState(new ChasseurSoloBehaviour(this,this.myMap,this.posAgent,0),G);
 		//fsm.registerState(new Balade(this,this.myMap), H);
 		//fsm.registerState(new Suiveur(this,this.myMap,0), I);
 		fsm.registerState(new SendPosition(this,list_agentNames,this.posAgent), H);
@@ -128,7 +127,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 		fsm.registerTransition(B,D,1);
 		fsm.registerTransition(B,C,0);
 		fsm.registerTransition(E,D,1);
-		fsm.registerTransition(E,A,0);
+		fsm.registerTransition(E,D,0);
 		fsm.registerDefaultTransition(C,E);
 		fsm.registerDefaultTransition(D,A);
 		fsm.registerDefaultTransition(F,H);
@@ -194,16 +193,5 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 	public List<Couple<String,Location>> getPosAgent() {
 		return this.posAgent;
 	}
-
-	public int getCount(){
-		return counter;
-	}
-
-	public void reset(){
-		counter=0;
-	}
-
-
-
 
 }

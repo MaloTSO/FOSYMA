@@ -52,14 +52,12 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, MapRepresentation myMap, List<Couple<String,Location>> posAgent,int max,int count) {
+	public ChasseurSoloBehaviour(final AbstractDedaleAgent myagent, MapRepresentation myMap, List<Couple<String,Location>> posAgent,int max) {
 		super(myagent);
 		this.myMap=myMap;
 		exitValue=max;
-		this.counter=count;
+		this.counter=0;
 		this.posAgent=posAgent;
-		
-	
 	}
 
 	@Override
@@ -79,12 +77,13 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 		if (myPosition!=null){
 
 			for (int i=0; i< this.posAgent.size();i++){
-				if(this.posAgent!=null && this.posAgent.get(i).getLeft().equals(this.myAgent.getLocalName()) && myPosition!=this.posAgent.get(i).getRight()){
-					((AgentFaitTout)(this.myAgent)).reset();
+				if(this.posAgent!=null && this.posAgent.get(i).getLeft().equals(this.myAgent.getLocalName()) && !myPosition.equals(this.posAgent.get(i).getRight())){
+					this.counter=0;
 				}
 			}
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
 
+			System.out.println(this.myAgent.getLocalName() + " AVANT " + lobs);
 
 			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
 			
@@ -94,13 +93,14 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			while (iter.hasNext()){
 				Location node=iter.next().getLeft();
 				for (int j=0; j<this.posAgent.size();j++){
-					if (this.posAgent.get(j).getLeft()!= "Golem" && node.equals(this.posAgent.get(j).getRight())){
+					if (!(this.posAgent.get(j).getLeft().equals("Golem")) && node.equals(this.posAgent.get(j).getRight())){
 						iter.remove();
 						break;
 					}
 				}
 			}
 
+			System.out.println(this.myAgent.getLocalName() + " APRES " + lobs);
 
 			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
 
@@ -132,9 +132,6 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 				}
 				if (stenchdetected==false){
 					int n = (int)(Math.random()*(lobs.size()));
-					if(n==0 && lobs.size()>1){
-						n=1;
-					}
 					Location balade=lobs.get(n).getLeft();
 					nextNodeId=balade.getLocationId();
 				}
@@ -155,11 +152,12 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 					
 					if (this.posAgent.get(i).getLeft().equals(coupleGolem.getLeft()) && this.posAgent.get(i).getRight().equals(posGolem)){
 						this.counter++;
+						System.out.println(this.myAgent.getLocalName() + " " +this.counter);
 						
 					}
 				}
 
-				if (((AgentFaitTout)(this.myAgent)).getCount()>5){
+				if (this.counter>50){
 
 					exitValue=1;
 					
