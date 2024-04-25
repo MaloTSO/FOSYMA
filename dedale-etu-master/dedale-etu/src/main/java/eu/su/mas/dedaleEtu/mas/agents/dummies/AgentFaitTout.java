@@ -7,12 +7,10 @@ import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
 import jade.core.behaviours.FSMBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.Balade;
 import eu.su.mas.dedaleEtu.mas.behaviours.ChasseurSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
-//import eu.su.mas.dedaleEtu.mas.behaviours.ReceiveMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.Receiver;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceivePosition;
@@ -20,7 +18,6 @@ import eu.su.mas.dedaleEtu.mas.behaviours.SendPosition;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.Share;
 import eu.su.mas.dedaleEtu.mas.behaviours.BloqueGolem;
-import eu.su.mas.dedaleEtu.mas.behaviours.Suiveur;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
@@ -80,9 +77,7 @@ public class AgentFaitTout extends AbstractDedaleAgent {
     private static final String I="receivePos";
 	private static final String J="Bloque";
 
-
-
-
+	
 	protected void setup(){
 
 		super.setup();
@@ -105,10 +100,10 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 
 		FSMBehaviour fsm =new FSMBehaviour(this);
 
-		fsm.registerFirstState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames,this.posAgent),A);
-		fsm.registerState(new PingSomeone(this,list_agentNames,0,this.posAgent), B);
+		fsm.registerState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames,this.posAgent),A);
+		fsm.registerFirstState(new PingSomeone(this,list_agentNames,0,this.posAgent,this.myMap), B);
 		fsm.registerState(new ReceiverPing(this,this.posAgent), C);
-		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames), D);
+		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames,this.posAgent), D);
 		//fsm.registerState(new ReceiveMap(this ,this.myMap), F);
 		fsm.registerState(new Share(this,this.myMap,list_agentNames), F);
 		fsm.registerState(new Receiver(this,0,this.posAgent), E);
@@ -122,13 +117,14 @@ public class AgentFaitTout extends AbstractDedaleAgent {
 
 
 
-		fsm.registerTransition(A,B,1);
+		fsm.registerTransition(B,A,1);
 		fsm.registerTransition(A,F,0);
-		fsm.registerTransition(B,D,1);
-		fsm.registerTransition(B,C,0);
-		fsm.registerTransition(E,D,1);
-		fsm.registerTransition(E,D,0);
-		fsm.registerDefaultTransition(C,E);
+		fsm.registerTransition(A,B,1);
+		fsm.registerTransition(B,D,0);
+		//fsm.registerTransition(B,C,0);
+		//fsm.registerTransition(E,D,1);
+		//fsm.registerTransition(E,D,0);
+		//fsm.registerDefaultTransition(C,E);
 		fsm.registerDefaultTransition(D,A);
 		fsm.registerDefaultTransition(F,H);
         fsm.registerDefaultTransition(H,I);

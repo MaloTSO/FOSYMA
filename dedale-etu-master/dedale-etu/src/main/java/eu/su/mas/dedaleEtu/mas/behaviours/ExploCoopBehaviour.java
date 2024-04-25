@@ -67,7 +67,7 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
 
 			try {
-				this.myAgent.doWait(100);
+				this.myAgent.doWait(200);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

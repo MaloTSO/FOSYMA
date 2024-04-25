@@ -68,12 +68,16 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 		if(this.myMap == null) {
 			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
 		}
+		
+
 
 		
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
 
 		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+
+		
 		if (myPosition!=null){
 
 			for (int i=0; i< this.posAgent.size();i++){
@@ -82,30 +86,36 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 				}
 			}
 			List<Couple<Location,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();
+			for (int i=0;i<this.posAgent.size();i++){
+				if (myPosition.equals(this.posAgent.get(i).getRight()) && this.posAgent.get(i).getLeft().equals("Golem")){
+					this.posAgent.remove(this.posAgent.get(i));
+				}
+			}
 
-			System.out.println(this.myAgent.getLocalName() + " AVANT " + lobs);
 
-			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
-			
-
+			int cpt=0;
+			for (int i=0;i<lobs.size();i++){
+				if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(0).getLeft().equals(Observation.STENCH)){
+					cpt++;
+				}
+			}
+		
 			Iterator<Couple<Location, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 
 			while (iter.hasNext()){
 				Location node=iter.next().getLeft();
 				for (int j=0; j<this.posAgent.size();j++){
-					if (!(this.posAgent.get(j).getLeft().equals("Golem")) && node.equals(this.posAgent.get(j).getRight())){
+					if (!(this.posAgent.get(j).getLeft().equals("Golem")) && node.equals(this.posAgent.get(j).getRight()) && (cpt>2 || cpt==0)){
 						iter.remove();
 						break;
 					}
 				}
 			}
 
-			System.out.println(this.myAgent.getLocalName() + " APRES " + lobs);
-
 			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
 
 			try {
-				this.myAgent.doWait(100);
+				this.myAgent.doWait(10);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -117,26 +127,37 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 			else{
 
-				boolean stenchdetected = false;
-				int i=0;
-				int j=0;
-				while (i<lobs.size() && stenchdetected== false){
-
-					if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(j).getLeft().equals(Observation.STENCH)){
-						stenchdetected=true;
-					}
-					else{
-						i++;
-					}
-
+				if (lobs.size()>1 && lobs.get(0).getLeft().equals(myPosition) && (cpt>1 || cpt==0)){
+					lobs.remove(0);
 				}
-				if (stenchdetected==false){
+
+				int tmp=-1;
+				int emp=-1;
+				for (int j=0;j<this.posAgent.size();j++){
+					if(this.posAgent.get(j).getLeft().equals("Golem")){
+						emp=j;
+					}
+				}
+
+				for (int i=0; i<lobs.size();i++){
+					if (lobs.get(i).getRight().size()!=0 && lobs.get(i).getRight().get(0).getLeft().equals(Observation.STENCH)){
+						if (emp!=-1 && lobs.get(i).getLeft().equals(this.posAgent.get(emp).getRight())){
+							tmp=i;
+						}
+						if (tmp==-1){
+							tmp=i;
+						}
+
+					}
+				}
+
+				if (tmp==-1){
 					int n = (int)(Math.random()*(lobs.size()));
 					Location balade=lobs.get(n).getLeft();
 					nextNodeId=balade.getLocationId();
 				}
 				else{	
-					Location accessibleNode=lobs.get(i).getLeft();
+					Location accessibleNode=lobs.get(tmp).getLeft();
 					nextNodeId=accessibleNode.getLocationId();
 				}
 
@@ -152,8 +173,6 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 					
 					if (this.posAgent.get(i).getLeft().equals(coupleGolem.getLeft()) && this.posAgent.get(i).getRight().equals(posGolem)){
 						this.counter++;
-						System.out.println(this.myAgent.getLocalName() + " " +this.counter);
-						
 					}
 				}
 

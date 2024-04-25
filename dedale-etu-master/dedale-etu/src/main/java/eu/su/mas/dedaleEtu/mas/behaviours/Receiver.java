@@ -42,7 +42,7 @@ public class Receiver extends OneShotBehaviour {
 			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
 		}
 
-		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("Communication"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("Position-Share"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
 

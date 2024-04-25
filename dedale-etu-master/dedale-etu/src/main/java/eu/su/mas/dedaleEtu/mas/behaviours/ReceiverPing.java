@@ -55,7 +55,7 @@ public class ReceiverPing extends OneShotBehaviour {
 		}
 
 		//1) create the reception template (inform + name of the sender)
-		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("UselessProtocol"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("Position-Share"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 
 		//2) get the message
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
@@ -65,7 +65,7 @@ public class ReceiverPing extends OneShotBehaviour {
 			Couple<String,Location> myCouple=new Couple<>(msg.getSender().getLocalName(), posi);
 			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);					
 			final ACLMessage msgResult = new ACLMessage(ACLMessage.INFORM);
-			msgResult.setProtocol("Communication");
+			msgResult.setProtocol("Position-Share");
 			msgResult.setSender(this.myAgent.getAID());
 			msgResult.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME));  	
 			msgResult.setContent(((AbstractDedaleAgent)this.myAgent).getCurrentPosition().toString());
