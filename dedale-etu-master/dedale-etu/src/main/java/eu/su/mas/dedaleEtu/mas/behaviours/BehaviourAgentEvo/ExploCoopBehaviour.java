@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo;
 
 import java.util.Iterator;
 import java.util.List;
@@ -137,7 +137,6 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 				{
 					if(this.prevNode.equals(myPosition)){
 						this.cptBloque++;
-						System.out.println(myAgent.getLocalName() + " bloque " + this.cptBloque);
 						this.move = false;
 					}
 				}
@@ -146,7 +145,6 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 					this.cptBloque=0;
 				}
 				
-				System.out.println(myAgent.getLocalName() + "  " + lobs);
 
 				if(this.cptBloque == 1){
 					if(lobs.size()>3){
@@ -155,7 +153,6 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 						{
 							if(nextNodeId == lobs.get(i).getLeft().getLocationId())
 							{
-								System.out.println("ici");
 								lobs.remove(i);
 								int n = (int)(Math.random()*(lobs.size()));
 								Location balade=lobs.get(n).getLeft();
@@ -166,7 +163,6 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 					}
 				}
 
-				System.out.println(myAgent.getLocalName() + "  " + lobs);
 				
 
 				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));

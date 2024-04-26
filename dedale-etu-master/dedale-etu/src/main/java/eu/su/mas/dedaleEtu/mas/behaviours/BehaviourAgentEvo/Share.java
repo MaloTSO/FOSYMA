@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo;
 
 import java.io.IOException;
 import java.util.List;

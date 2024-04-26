@@ -7,17 +7,14 @@ import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.platformManagment.*;
 import jade.core.behaviours.FSMBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.ChasseurSoloBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.PingSomeone;
-import eu.su.mas.dedaleEtu.mas.behaviours.Receiver;
-import eu.su.mas.dedaleEtu.mas.behaviours.ReceiverPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.ReceivePosition;
-import eu.su.mas.dedaleEtu.mas.behaviours.SendPosition;
-import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.Share;
-import eu.su.mas.dedaleEtu.mas.behaviours.BloqueGolem;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.BloqueGolem;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.ChasseurSoloBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.ExploCoopBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.PingSomeone;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.ReceivePosition;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.SendPosition;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.Share;
+import eu.su.mas.dedaleEtu.mas.behaviours.BehaviourAgentEvo.ShareMapBehaviour;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 
 import jade.core.behaviours.Behaviour;
@@ -52,32 +49,15 @@ public class AgentEvolutif extends AbstractDedaleAgent {
     private List<Couple<String,Location>> posAgent = new ArrayList<>();
 
 
-
-
-
-	/**
-	 * This method is automatically called when "agent".start() is executed.
-	 * Consider that Agent is launched for the first time. 
-	 * 			1) set the agent attributes 
-	 *	 		2) add the behaviours
-	 *          
-	 */
-
 	private static final String A="explo";
 	private static final String B="ping";
-	private static final String C="receivePing";
 	private static final String D="shareMap";
-	private static final String E="receive";
 	private static final String F="Share";
-	//private static final String F="receivemap";
 	private static final String G="chasseur";
-    //private static final String H="balade";
-    //private static final String I="suiveur";
 	private static final String H="SendPos";
     private static final String I="receivePos";
 	private static final String J="Bloque";
 
-	
 	protected void setup(){
 
 		super.setup();
@@ -102,14 +82,9 @@ public class AgentEvolutif extends AbstractDedaleAgent {
 
 		fsm.registerState(new ExploCoopBehaviour(this,1,this.myMap,list_agentNames,this.posAgent),A);
 		fsm.registerFirstState(new PingSomeone(this,list_agentNames,0,this.posAgent,this.myMap), B);
-		fsm.registerState(new ReceiverPing(this,this.posAgent), C);
 		fsm.registerState(new ShareMapBehaviour(this,this.myMap,list_agentNames,this.posAgent), D);
-		//fsm.registerState(new ReceiveMap(this ,this.myMap), F);
 		fsm.registerState(new Share(this,this.myMap,list_agentNames), F);
-		fsm.registerState(new Receiver(this,0,this.posAgent), E);
         fsm.registerState(new ChasseurSoloBehaviour(this,this.myMap,this.posAgent,0),G);
-		//fsm.registerState(new Balade(this,this.myMap), H);
-		//fsm.registerState(new Suiveur(this,this.myMap,0), I);
 		fsm.registerState(new SendPosition(this,list_agentNames,this.posAgent), H);
 		fsm.registerState(new ReceivePosition(this,this.posAgent), I);
 		fsm.registerState(new BloqueGolem(this,list_agentNames), J);
@@ -121,10 +96,6 @@ public class AgentEvolutif extends AbstractDedaleAgent {
 		fsm.registerTransition(A,F,0);
 		fsm.registerTransition(A,B,1);
 		fsm.registerTransition(B,D,0);
-		//fsm.registerTransition(B,C,0);
-		//fsm.registerTransition(E,D,1);
-		//fsm.registerTransition(E,D,0);
-		//fsm.registerDefaultTransition(C,E);
 		fsm.registerDefaultTransition(D,A);
 		fsm.registerDefaultTransition(F,H);
         fsm.registerDefaultTransition(H,I);
