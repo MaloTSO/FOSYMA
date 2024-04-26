@@ -33,6 +33,8 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 
 	private List<String> list_agentNames;
 	private List<Couple<String,Location>> posAgent;
+	private int cptBloque;
+	private String nextNode;
 
 /**
  * 
@@ -46,6 +48,7 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 		this.list_agentNames=agentNames;
 		this.posAgent=posAgent;
 		exitValue=max;
+		cptBloque=0;
 	}
 
 	@Override
@@ -113,10 +116,20 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 					nextNodeId=this.myMap.getShortestPathToClosestOpenNode(myPosition.getLocationId()).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
 					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
 				}
+				System.out.println(myAgent.getLocalName()+ " " + myPosition.getLocationId());
+				System.out.println(myAgent.getLocalName()+ " " + this.nextNode);
+				if(this.nextNode != null && myPosition.getLocationId()==this.nextNode)
+				{
+					cptBloque++;
+					System.out.println(myAgent.getLocalName()+ " " + cptBloque);
+				}
+
+				this.nextNode = nextNodeId;
+
+				
 
 				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
 			}
-
 		}
 	}
 

@@ -184,6 +184,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			}
 
 			((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));
+			
 
 		}
 
