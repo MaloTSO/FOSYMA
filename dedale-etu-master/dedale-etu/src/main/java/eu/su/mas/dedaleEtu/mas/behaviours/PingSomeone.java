@@ -8,7 +8,7 @@ import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 
@@ -42,10 +42,10 @@ public class PingSomeone extends OneShotBehaviour {
 			exitValue=1;
 		}
 		
-		this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
+		this.myMap=((AgentEvolutif)(this.myAgent)).getMyMap();
 
 		if(this.posAgent==null) {
-			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+			this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
 		}
 		if (exitValue==0){
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);

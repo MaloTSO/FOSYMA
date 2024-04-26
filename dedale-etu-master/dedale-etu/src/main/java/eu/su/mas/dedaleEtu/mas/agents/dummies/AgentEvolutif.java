@@ -45,7 +45,7 @@ import jade.core.behaviours.Behaviour;
  */
 
 
-public class AgentFaitTout extends AbstractDedaleAgent {
+public class AgentEvolutif extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap=null;

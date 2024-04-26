@@ -8,7 +8,7 @@ import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 
@@ -64,10 +64,10 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 		}
 
 		if(this.posAgent==null) {
-			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+			this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
 		}
 		if(this.myMap==null) {
-			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
+			this.myMap=((AgentEvolutif)(this.myAgent)).getMyMap();
 		}
 		
 		final MessageTemplate msgTemplate = MessageTemplate.and(MessageTemplate.MatchProtocol("Position-Share"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
@@ -77,7 +77,7 @@ public class ShareMapBehaviour extends OneShotBehaviour{
 			Location posi= new gsLocation(msgR.getContent());
 			String agent=msgR.getSender().getLocalName();
             Couple<String,Location> myCouple=new Couple<>(agent, posi);
-            ((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+            ((AgentEvolutif)(this.myAgent)).setPosAgent(myCouple);
 
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 			msg.setProtocol("SHARE-TOPO");

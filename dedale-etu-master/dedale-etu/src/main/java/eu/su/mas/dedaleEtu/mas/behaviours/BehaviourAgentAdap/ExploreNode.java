@@ -12,7 +12,7 @@ import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentAdaptatif;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;

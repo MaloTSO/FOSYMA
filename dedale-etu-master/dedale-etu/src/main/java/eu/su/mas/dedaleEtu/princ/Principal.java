@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentAdaptatif;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.DummyCollectorAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.DummyMovingAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.DummyTankerAgent;

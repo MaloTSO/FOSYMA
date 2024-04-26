@@ -8,7 +8,7 @@ import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.gs.gsLocation;
 import dataStructures.serializableGraph.SerializableSimpleGraph;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -52,7 +52,7 @@ public class ReceivePosition extends OneShotBehaviour {
 		}
 
         if(this.posAgent==null) {
-			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+			this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
 		}
 
 		MessageTemplate msgTemplate=MessageTemplate.and(MessageTemplate.MatchProtocol("Position-Share"),MessageTemplate.MatchPerformative(ACLMessage.INFORM));
@@ -63,7 +63,7 @@ public class ReceivePosition extends OneShotBehaviour {
 
             Couple<String,Location> myCouple=new Couple<>(msgReceived.getSender().getLocalName(), posi);
 
-            ((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+            ((AgentEvolutif)(this.myAgent)).setPosAgent(myCouple);
         }
 
     

@@ -11,7 +11,7 @@ import eu.su.mas.dedale.env.gs.gsLocation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
@@ -34,7 +34,8 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 	private List<String> list_agentNames;
 	private List<Couple<String,Location>> posAgent;
 	private int cptBloque;
-	private String nextNode;
+	private boolean move;
+	private Location prevNode;
 
 /**
  * 
@@ -48,21 +49,33 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 		this.list_agentNames=agentNames;
 		this.posAgent=posAgent;
 		exitValue=max;
-		cptBloque=0;
+		this.cptBloque=0;
+		this.move = true;
+		this.prevNode = null;
 	}
 
 	@Override
 	public void action() {
+
+		this.prevNode = null;
+		
 		if(this.myMap==null) {
-			((AgentFaitTout)(this.myAgent)).setMyMap(new MapRepresentation());
-			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
+			((AgentEvolutif)(this.myAgent)).setMyMap(new MapRepresentation());
+			this.myMap=((AgentEvolutif)(this.myAgent)).getMyMap();
 		}
 
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
 
-		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
-		((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+		for(int i = 0; i<this.posAgent.size(); i++){
+			if(this.posAgent.get(i).getLeft().equals(this.myAgent.getLocalName()))
+			{
+				this.prevNode = this.posAgent.get(i).getRight();
+			}
+		}
+
+		this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
+		((AgentEvolutif)(this.myAgent)).setPosAgent(myCouple);
 		
 
 		if (myPosition!=null){
@@ -116,16 +129,44 @@ public class ExploCoopBehaviour extends OneShotBehaviour {
 					nextNodeId=this.myMap.getShortestPathToClosestOpenNode(myPosition.getLocationId()).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
 					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
 				}
-				System.out.println(myAgent.getLocalName()+ " " + myPosition.getLocationId());
-				System.out.println(myAgent.getLocalName()+ " " + this.nextNode);
-				if(this.nextNode != null && myPosition.getLocationId()==this.nextNode)
+
+				this.move = true;
+				
+
+				if (prevNode!=null)
 				{
-					cptBloque++;
-					System.out.println(myAgent.getLocalName()+ " " + cptBloque);
+					if(this.prevNode.equals(myPosition)){
+						this.cptBloque++;
+						System.out.println(myAgent.getLocalName() + " bloque " + this.cptBloque);
+						this.move = false;
+					}
 				}
 
-				this.nextNode = nextNodeId;
+				if(move == true){
+					this.cptBloque=0;
+				}
+				
+				System.out.println(myAgent.getLocalName() + "  " + lobs);
 
+				if(this.cptBloque == 1){
+					if(lobs.size()>3){
+						
+						for(int i = 0; i<lobs.size(); i++)
+						{
+							if(nextNodeId == lobs.get(i).getLeft().getLocationId())
+							{
+								System.out.println("ici");
+								lobs.remove(i);
+								int n = (int)(Math.random()*(lobs.size()));
+								Location balade=lobs.get(n).getLeft();
+								nextNodeId=balade.getLocationId();
+								break;
+							}
+						}
+					}
+				}
+
+				System.out.println(myAgent.getLocalName() + "  " + lobs);
 				
 
 				((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId));

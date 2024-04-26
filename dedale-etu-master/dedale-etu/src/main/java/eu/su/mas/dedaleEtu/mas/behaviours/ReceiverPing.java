@@ -8,7 +8,7 @@ import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.gs.gsLocation;
 import dataStructures.serializableGraph.SerializableSimpleGraph;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -51,7 +51,7 @@ public class ReceiverPing extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 		if(this.posAgent==null) {
-			this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+			this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
 		}
 
 		//1) create the reception template (inform + name of the sender)
@@ -63,7 +63,7 @@ public class ReceiverPing extends OneShotBehaviour {
 		if (msg != null) {	
 			Location posi= new gsLocation(msg.getContent());
 			Couple<String,Location> myCouple=new Couple<>(msg.getSender().getLocalName(), posi);
-			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);					
+			((AgentEvolutif)(this.myAgent)).setPosAgent(myCouple);					
 			final ACLMessage msgResult = new ACLMessage(ACLMessage.INFORM);
 			msgResult.setProtocol("Position-Share");
 			msgResult.setSender(this.myAgent.getAID());

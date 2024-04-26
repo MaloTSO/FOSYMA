@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import dataStructures.serializableGraph.SerializableSimpleGraph;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Location;
 import eu.su.mas.dedale.env.Observation;
@@ -66,7 +66,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 
 	
 		if(this.myMap == null) {
-			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
+			this.myMap=((AgentEvolutif)(this.myAgent)).getMyMap();
 		}
 		
 
@@ -75,7 +75,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 		Location myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		Couple<String,Location> myCouple=new Couple<>(this.myAgent.getLocalName(), myPosition);
 
-		this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+		this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
 
 		
 		if (myPosition!=null){
@@ -112,7 +112,7 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 				}
 			}
 
-			((AgentFaitTout)(this.myAgent)).setPosAgent(myCouple);
+			((AgentEvolutif)(this.myAgent)).setPosAgent(myCouple);
 
 			try {
 				this.myAgent.doWait(10);
@@ -165,8 +165,8 @@ public class ChasseurSoloBehaviour extends OneShotBehaviour {
 			if (!((AbstractDedaleAgent)this.myAgent).moveTo(new gsLocation(nextNodeId))){
 				Location posGolem=new gsLocation(nextNodeId);
 				Couple<String,Location> coupleGolem=new Couple<>("Golem", posGolem);
-				((AgentFaitTout)(this.myAgent)).setPosAgent(coupleGolem);
-				this.posAgent=((AgentFaitTout)(this.myAgent)).getPosAgent();
+				((AgentEvolutif)(this.myAgent)).setPosAgent(coupleGolem);
+				this.posAgent=((AgentEvolutif)(this.myAgent)).getPosAgent();
 
 				
 				for (int i=0; i<this.posAgent.size();i++){

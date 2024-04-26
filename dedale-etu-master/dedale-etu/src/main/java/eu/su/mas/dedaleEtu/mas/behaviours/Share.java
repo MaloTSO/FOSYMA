@@ -6,7 +6,7 @@ import java.util.List;
 import dataStructures.serializableGraph.SerializableSimpleGraph;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentFaitTout;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.AgentEvolutif;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 
@@ -63,7 +63,7 @@ public class Share extends OneShotBehaviour{
 			e.printStackTrace();
 		}
 		if(this.myMap==null) {
-			this.myMap=((AgentFaitTout)(this.myAgent)).getMyMap();
+			this.myMap=((AgentEvolutif)(this.myAgent)).getMyMap();
 		}
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setProtocol("SHARE-TOPO");
