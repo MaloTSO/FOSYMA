@@ -430,7 +430,7 @@ public class Principal {
 		ag=createNewDedaleAgent(c, agentName, AgentAdaptatif.class.getName(),entityParametersExplo3);//ExploreSoloAgent
 		agentList.add(ag);
 
-		/*********
+		/********
 		 * AGENT Explo4
 		 *********/
 		// 1) Get the container where the agent will appear
